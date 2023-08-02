@@ -885,7 +885,9 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
                       predict.all, keep.inbag, sample.fraction, alpha, minprop, holdout, prediction.type, 
                       num.random.splits, sparse.x, use.sparse.data, order.snps, oob.error, max.depth, 
                       inbag, use.inbag, 
-                      regularization.factor, use.regularization.factor, regularization.usedepth)
+                      regularization.factor, use.regularization.factor, regularization.usedepth,
+                      #### group specific arguments
+                      use_grouped_variables, groups, splitmethod)
   
   if (length(result) == 0) {
     stop("User interrupt or internal error.")

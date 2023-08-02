@@ -12,6 +12,8 @@ R package "ranger" under GPL3 license.
 #ifndef GLOBALS_H_
 #define GLOBALS_H_
 
+#include <string>
+
 namespace ranger {
 
 #ifndef M_PI
@@ -97,6 +99,9 @@ const double STATUS_INTERVAL = 30.0;
 
 // Threshold for q value split method switch
 const double Q_THRESHOLD = 0.02;
+
+// Group specific globals
+const std::string DEFAULT_SPLITMETHOD = "LDA";
 
 } // namespace ranger
 
