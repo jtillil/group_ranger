@@ -25,6 +25,7 @@
  http://www.imbs-luebeck.de
  #-------------------------------------------------------------------------------*/
 
+#include <Rcpp.h>
 #include <RcppEigen.h>
 #include <vector>
 #include <sstream>
@@ -34,6 +35,7 @@
 #include "globals.h"
 #include "Forest.h"
 #include "ForestClassification.h"
+#include "ForestClassificationGroup.h"
 #include "ForestRegression.h"
 #include "ForestSurvival.h"
 #include "ForestProbability.h"
@@ -44,7 +46,8 @@
 #include "DataSparse.h"
 #include "utility.h"
 
-using namespace ranger;
+
+using namespace granger;
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
@@ -68,6 +71,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
 
   try {
     std::unique_ptr<Forest> forest { };
+    std::unique_ptr<ForestGroup> forestgroup { };
     std::unique_ptr<Data> data { };
 
     // Empty split select weights and always split variables if not used
@@ -130,7 +134,11 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       if (probability) {
         forest = std::make_unique<ForestProbability>();
       } else {
-        forest = std::make_unique<ForestClassification>();
+        if (use_grouped_variables) {
+          forestgroup = std::make_unique<ForestClassificationGroup>();
+        } else {
+          forest = std::make_unique<ForestClassification>();
+        }
       }
       break;
     case TREE_REGRESSION:
@@ -149,11 +157,19 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     PredictionType prediction_type = (PredictionType) prediction_type_r;
 
     // Init Ranger
-    forest->initR(std::move(data), mtry, num_trees, verbose_out, seed, num_threads,
-        importance_mode, min_node_size, min_bucket, split_select_weights, always_split_variable_names,
-        prediction_mode, sample_with_replacement, unordered_variable_names, save_memory, splitrule, case_weights,
-        inbag, predict_all, keep_inbag, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, 
-        order_snps, max_depth, regularization_factor, regularization_usedepth);
+    if (use_grouped_variables) {
+      forestgroup->initR(std::move(data), mtry, num_trees, verbose_out, seed, num_threads,
+          importance_mode, min_node_size, min_bucket, split_select_weights, always_split_variable_names,
+          prediction_mode, sample_with_replacement, unordered_variable_names, save_memory, splitrule, case_weights,
+          inbag, predict_all, keep_inbag, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, 
+          order_snps, max_depth, regularization_factor, regularization_usedepth, use_grouped_variables, groups, splitmethod);
+    } else {
+      forest->initR(std::move(data), mtry, num_trees, verbose_out, seed, num_threads,
+          importance_mode, min_node_size, min_bucket, split_select_weights, always_split_variable_names,
+          prediction_mode, sample_with_replacement, unordered_variable_names, save_memory, splitrule, case_weights,
+          inbag, predict_all, keep_inbag, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, 
+          order_snps, max_depth, regularization_factor, regularization_usedepth);
+    }
 
     // Load forest object if in prediction mode
     if (prediction_mode) {
@@ -163,10 +179,15 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       std::vector<bool> is_ordered = loaded_forest["is.ordered"];
 
       if (treetype == TREE_CLASSIFICATION) {
-        std::vector<double> class_values = loaded_forest["class.values"];
-        auto& temp = dynamic_cast<ForestClassification&>(*forest);
-        temp.loadForest(num_trees, child_nodeIDs, split_varIDs, split_values, class_values,
-            is_ordered);
+        if (use_grouped_variables) {
+          std::vector<double> class_values = loaded_forest["class.values"];
+          auto& temp = dynamic_cast<ForestClassificationGroup&>(*forestgroup);
+          temp.loadForest(num_trees, child_nodeIDs, split_varIDs, split_values, class_values, is_ordered);
+        } else {
+          std::vector<double> class_values = loaded_forest["class.values"];
+          auto& temp = dynamic_cast<ForestClassification&>(*forest);
+          temp.loadForest(num_trees, child_nodeIDs, split_varIDs, split_values, class_values, is_ordered);
+        }
       } else if (treetype == TREE_REGRESSION) {
         auto& temp = dynamic_cast<ForestRegression&>(*forest);
         temp.loadForest(num_trees, child_nodeIDs, split_varIDs, split_values, is_ordered);
@@ -195,7 +216,11 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     }
 
     // Run Ranger
-    forest->run(false, oob_error);
+    if (use_grouped_variables) {
+      forestgroup->run(false, oob_error);
+    } else {
+      forest->run(false, oob_error);
+    }
 
     if (use_split_select_weights && importance_mode != IMP_NONE) {
       if (verbose_out) {
@@ -206,68 +231,124 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     }
 
     // Use first non-empty dimension of predictions
-    const std::vector<std::vector<std::vector<double>>>& predictions = forest->getPredictions();
-    if (predictions.size() == 1) {
-      if (predictions[0].size() == 1) {
-        result.push_back(forest->getPredictions()[0][0], "predictions");
+    if (use_grouped_variables) {
+      const std::vector<std::vector<std::vector<double>>>& predictions = forestgroup->getPredictions();
+      if (predictions.size() == 1) {
+        if (predictions[0].size() == 1) {
+          result.push_back(forestgroup->getPredictions()[0][0], "predictions");
+        } else {
+          result.push_back(forestgroup->getPredictions()[0], "predictions");
+        }
       } else {
-        result.push_back(forest->getPredictions()[0], "predictions");
+        result.push_back(forestgroup->getPredictions(), "predictions");
       }
     } else {
-      result.push_back(forest->getPredictions(), "predictions");
-    }
-
-    // Return output
-    result.push_back(forest->getNumTrees(), "num.trees");
-    result.push_back(forest->getNumIndependentVariables(), "num.independent.variables");
-    if (treetype == TREE_SURVIVAL) {
-      auto& temp = dynamic_cast<ForestSurvival&>(*forest);
-      result.push_back(temp.getUniqueTimepoints(), "unique.death.times");
-    }
-    if (!prediction_mode) {
-      result.push_back(forest->getMtry(), "mtry");
-      result.push_back(forest->getMinNodeSize(), "min.node.size");
-      if (importance_mode != IMP_NONE) {
-        result.push_back(forest->getVariableImportance(), "variable.importance");
-        if (importance_mode == IMP_PERM_CASEWISE) {
-          result.push_back(forest->getVariableImportanceCasewise(), "variable.importance.local");
+      const std::vector<std::vector<std::vector<double>>>& predictions = forest->getPredictions();
+      if (predictions.size() == 1) {
+        if (predictions[0].size() == 1) {
+          result.push_back(forest->getPredictions()[0][0], "predictions");
+        } else {
+          result.push_back(forest->getPredictions()[0], "predictions");
         }
+      } else {
+        result.push_back(forest->getPredictions(), "predictions");
       }
-      result.push_back(forest->getOverallPredictionError(), "prediction.error");
     }
+    
+    // Return output
+    if (use_grouped_variables) {
+      result.push_back(forestgroup->getNumTrees(), "num.trees");
+      result.push_back(forestgroup->getNumIndependentVariables(), "num.independent.variables");
+      if (!prediction_mode) {
+        result.push_back(forestgroup->getMtry(), "mtry");
+        result.push_back(forestgroup->getMinNodeSize(), "min.node.size");
+        if (importance_mode != IMP_NONE) {
+          result.push_back(forestgroup->getVariableImportance(), "variable.importance");
+          if (importance_mode == IMP_PERM_CASEWISE) {
+            result.push_back(forestgroup->getVariableImportanceCasewise(), "variable.importance.local");
+          }
+        }
+        result.push_back(forestgroup->getOverallPredictionError(), "prediction.error");
+      }
 
-    if (keep_inbag) {
-      result.push_back(forest->getInbagCounts(), "inbag.counts");
+      if (keep_inbag) {
+        result.push_back(forestgroup->getInbagCounts(), "inbag.counts");
+      }
+    } else {
+      result.push_back(forest->getNumTrees(), "num.trees");
+      result.push_back(forest->getNumIndependentVariables(), "num.independent.variables");
+      if (treetype == TREE_SURVIVAL) {
+        auto& temp = dynamic_cast<ForestSurvival&>(*forest);
+        result.push_back(temp.getUniqueTimepoints(), "unique.death.times");
+      }
+      if (!prediction_mode) {
+        result.push_back(forest->getMtry(), "mtry");
+        result.push_back(forest->getMinNodeSize(), "min.node.size");
+        if (importance_mode != IMP_NONE) {
+          result.push_back(forest->getVariableImportance(), "variable.importance");
+          if (importance_mode == IMP_PERM_CASEWISE) {
+            result.push_back(forest->getVariableImportanceCasewise(), "variable.importance.local");
+          }
+        }
+        result.push_back(forest->getOverallPredictionError(), "prediction.error");
+      }
+
+      if (keep_inbag) {
+        result.push_back(forest->getInbagCounts(), "inbag.counts");
+      }
     }
 
     // Save forest if needed
-    if (write_forest) {
-      Rcpp::List forest_object;
-      forest_object.push_back(forest->getNumTrees(), "num.trees");
-      forest_object.push_back(forest->getChildNodeIDs(), "child.nodeIDs");
-      forest_object.push_back(forest->getSplitVarIDs(), "split.varIDs");
-      forest_object.push_back(forest->getSplitValues(), "split.values");
-      forest_object.push_back(forest->getIsOrderedVariable(), "is.ordered");
+    if (use_grouped_variables) {
+      if (write_forest) {
+        Rcpp::List forest_object;
+        forest_object.push_back(forestgroup->getNumTrees(), "num.trees");
+        forest_object.push_back(forestgroup->getChildNodeIDs(), "child.nodeIDs");
+        forest_object.push_back(forestgroup->getSplitVarIDs(), "split.varIDs");
+        forest_object.push_back(forestgroup->getSplitValues(), "split.values");
+        forest_object.push_back(forestgroup->getIsOrderedVariable(), "is.ordered");
 
-      if (snp_data.nrow() > 1 && order_snps) {
-        // Exclude permuted SNPs (if any)
-        std::vector<std::vector<size_t>> snp_order = forest->getSnpOrder();
-        forest_object.push_back(std::vector<std::vector<size_t>>(snp_order.begin(), snp_order.begin() + snp_data.ncol()), "snp.order");
+        if (snp_data.nrow() > 1 && order_snps) {
+          // Exclude permuted SNPs (if any)
+          std::vector<std::vector<size_t>> snp_order = forestgroup->getSnpOrder();
+          forest_object.push_back(std::vector<std::vector<size_t>>(snp_order.begin(), snp_order.begin() + snp_data.ncol()), "snp.order");
+        }
+        
+        if (treetype == TREE_CLASSIFICATION) {
+          auto& temp = dynamic_cast<ForestClassificationGroup&>(*forestgroup);
+          forest_object.push_back(temp.getClassValues(), "class.values");
+        }
+        result.push_back(forest_object, "forestgroup");
       }
-      
-      if (treetype == TREE_CLASSIFICATION) {
-        auto& temp = dynamic_cast<ForestClassification&>(*forest);
-        forest_object.push_back(temp.getClassValues(), "class.values");
-      } else if (treetype == TREE_PROBABILITY) {
-        auto& temp = dynamic_cast<ForestProbability&>(*forest);
-        forest_object.push_back(temp.getClassValues(), "class.values");
-        forest_object.push_back(temp.getTerminalClassCounts(), "terminal.class.counts");
-      } else if (treetype == TREE_SURVIVAL) {
-        auto& temp = dynamic_cast<ForestSurvival&>(*forest);
-        forest_object.push_back(temp.getChf(), "chf");
-        forest_object.push_back(temp.getUniqueTimepoints(), "unique.death.times");
+    } else {
+      if (write_forest) {
+        Rcpp::List forest_object;
+        forest_object.push_back(forest->getNumTrees(), "num.trees");
+        forest_object.push_back(forest->getChildNodeIDs(), "child.nodeIDs");
+        forest_object.push_back(forest->getSplitVarIDs(), "split.varIDs");
+        forest_object.push_back(forest->getSplitValues(), "split.values");
+        forest_object.push_back(forest->getIsOrderedVariable(), "is.ordered");
+
+        if (snp_data.nrow() > 1 && order_snps) {
+          // Exclude permuted SNPs (if any)
+          std::vector<std::vector<size_t>> snp_order = forest->getSnpOrder();
+          forest_object.push_back(std::vector<std::vector<size_t>>(snp_order.begin(), snp_order.begin() + snp_data.ncol()), "snp.order");
+        }
+        
+        if (treetype == TREE_CLASSIFICATION) {
+          auto& temp = dynamic_cast<ForestClassification&>(*forest);
+          forest_object.push_back(temp.getClassValues(), "class.values");
+        } else if (treetype == TREE_PROBABILITY) {
+          auto& temp = dynamic_cast<ForestProbability&>(*forest);
+          forest_object.push_back(temp.getClassValues(), "class.values");
+          forest_object.push_back(temp.getTerminalClassCounts(), "terminal.class.counts");
+        } else if (treetype == TREE_SURVIVAL) {
+          auto& temp = dynamic_cast<ForestSurvival&>(*forest);
+          forest_object.push_back(temp.getChf(), "chf");
+          forest_object.push_back(temp.getUniqueTimepoints(), "unique.death.times");
+        }
+        result.push_back(forest_object, "forest");
       }
-      result.push_back(forest_object, "forest");
     }
     
     if (!verbose) {
