@@ -226,12 +226,24 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
                    num.threads = NULL, save.memory = FALSE,
                    verbose = TRUE, seed = NULL, 
                    dependent.variable.name = NULL, status.variable.name = NULL, 
-                   classification = NULL, x = NULL, y = NULL, ...) {
+                   classification = NULL, x = NULL, y = NULL,
+                   #### group specific arguments
+                   use_grouped_variables = FALSE, groups = NULL, splitmethod = "LDA", ...) {
   
   ## Handle ... arguments
   if (length(list(...)) > 0) {
     warning(paste("Unused arguments:", paste(names(list(...)), collapse = ", ")))
   }
+
+#### Handle group specific arguments ####
+
+  ## Group structure
+  if (use_grouped_variables && is.null(groups)) {
+    ## variable groups
+    stop("Error: Group structure of predictors is required.")
+  }
+
+#### Handle ranger arguments ####
   
   ## By default not in GWAS mode
   snp.data <- as.matrix(0)
