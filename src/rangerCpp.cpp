@@ -215,18 +215,18 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     } else {
       // Set class weights
-      if (treetype == TREE_CLASSIFICATION && !class_weights.empty()) {
-        if (use_grouped_variables) {
-          auto& temp = dynamic_cast<ForestClassificationGroup&>(*forestgroup);
-          temp.setClassWeights(class_weights);
-        } else {
-          auto& temp = dynamic_cast<ForestClassification&>(*forest);
-          temp.setClassWeights(class_weights);
-        }
-      } else if (treetype == TREE_PROBABILITY && !class_weights.empty()) {
-        auto& temp = dynamic_cast<ForestProbability&>(*forest);
-        temp.setClassWeights(class_weights);
-      }
+      // if (treetype == TREE_CLASSIFICATION && !class_weights.empty()) {
+      //   if (use_grouped_variables) {
+      //     auto& temp = dynamic_cast<ForestClassificationGroup&>(*forestgroup);
+      //     temp.setClassWeights(class_weights);
+      //   } else {
+      //     auto& temp = dynamic_cast<ForestClassification&>(*forest);
+      //     temp.setClassWeights(class_weights);
+      //   }
+      // } else if (treetype == TREE_PROBABILITY && !class_weights.empty()) {
+      //   auto& temp = dynamic_cast<ForestProbability&>(*forest);
+      //   temp.setClassWeights(class_weights);
+      // }
     }
 
     printf("You got until run function\n");
