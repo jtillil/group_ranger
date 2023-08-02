@@ -70,9 +70,12 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
   Rcpp::List result;
 
   try {
+
     std::unique_ptr<Forest> forest { };
     std::unique_ptr<ForestGroup> forestgroup { };
     std::unique_ptr<Data> data { };
+    
+    printf("You got past forest declaration\n");
 
     // Empty split select weights and always split variables if not used
     if (!use_split_select_weights) {
@@ -129,6 +132,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     }
 
+    printf("You got until forest assignment\n");
+
     switch (treetype) {
     case TREE_CLASSIFICATION:
       if (probability) {
@@ -156,6 +161,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     SplitRule splitrule = (SplitRule) splitrule_r;
     PredictionType prediction_type = (PredictionType) prediction_type_r;
 
+    printf("You got until initR\n");
+
     // Init Ranger
     if (use_grouped_variables) {
       forestgroup->initR(std::move(data), mtry, num_trees, verbose_out, seed, num_threads,
@@ -170,6 +177,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
           inbag, predict_all, keep_inbag, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, 
           order_snps, max_depth, regularization_factor, regularization_usedepth);
     }
+
+    printf("You got past initR\n");
 
     // Load forest object if in prediction mode
     if (prediction_mode) {
