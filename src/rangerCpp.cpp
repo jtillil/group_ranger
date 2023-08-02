@@ -47,7 +47,7 @@
 #include "utility.h"
 
 
-using namespace granger;
+using namespace ranger;
 
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::export]]
