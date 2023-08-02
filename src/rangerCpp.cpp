@@ -178,7 +178,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
           order_snps, max_depth, regularization_factor, regularization_usedepth);
     }
 
-    printf("You got past initR\n");
+    printf("You got until class weights\n");
 
     // Load forest object if in prediction mode
     if (prediction_mode) {
@@ -224,6 +224,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     }
 
+    printf("You got until run function\n");
+
     // Run Ranger
     if (use_grouped_variables) {
       forestgroup->run(false, oob_error);
@@ -238,6 +240,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
             << std::endl;
       }
     }
+
+    printf("You got until collecting predictions\n");
 
     // Use first non-empty dimension of predictions
     if (use_grouped_variables) {
@@ -263,6 +267,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
         result.push_back(forest->getPredictions(), "predictions");
       }
     }
+
+    printf("You got until returning output");
     
     // Return output
     if (use_grouped_variables) {
@@ -306,6 +312,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
         result.push_back(forest->getInbagCounts(), "inbag.counts");
       }
     }
+
+    printf("You got until saving\n");
 
     // Save forest if needed
     if (use_grouped_variables) {
