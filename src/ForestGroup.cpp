@@ -39,103 +39,103 @@ ForestGroup::ForestGroup() :
 }
 
 // #nocov start
-void ForestGroup::initCpp(std::string dependent_variable_name, MemoryMode memory_mode, std::string input_file, uint mtry,
-    std::string output_prefix, uint num_trees, std::ostream* verbose_out, uint seed, uint num_threads,
-    std::string load_forest_filename, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
-    std::string split_select_weights_file, const std::vector<std::string>& always_split_variable_names,
-    std::string status_variable_name, bool sample_with_replacement,
-    const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
-    std::string case_weights_file, bool predict_all, double sample_fraction, double alpha, double minprop, bool holdout,
-    PredictionType prediction_type, uint num_random_splits, uint max_depth,
-    const std::vector<double>& regularization_factor, bool regularization_usedepth,
-    // group specific arguments
-    bool use_grouped_variables, Rcpp::List groups, std::string splitmethod
-    ) {
+// void ForestGroup::initCpp(std::string dependent_variable_name, MemoryMode memory_mode, std::string input_file, uint mtry,
+//     std::string output_prefix, uint num_trees, std::ostream* verbose_out, uint seed, uint num_threads,
+//     std::string load_forest_filename, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
+//     std::string split_select_weights_file, const std::vector<std::string>& always_split_variable_names,
+//     std::string status_variable_name, bool sample_with_replacement,
+//     const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
+//     std::string case_weights_file, bool predict_all, double sample_fraction, double alpha, double minprop, bool holdout,
+//     PredictionType prediction_type, uint num_random_splits, uint max_depth,
+//     const std::vector<double>& regularization_factor, bool regularization_usedepth,
+//     // group specific arguments
+//     bool use_grouped_variables, Rcpp::List groups, std::string splitmethod
+//     ) {
 
-  this->memory_mode = memory_mode;
-  this->verbose_out = verbose_out;
+//   this->memory_mode = memory_mode;
+//   this->verbose_out = verbose_out;
 
-  if (!dependent_variable_name.empty()) {
-    if (status_variable_name.empty()) {
-      this->dependent_variable_names = {dependent_variable_name};
-    } else {
-      this->dependent_variable_names = {dependent_variable_name, status_variable_name};
-    }
-  }
+//   if (!dependent_variable_name.empty()) {
+//     if (status_variable_name.empty()) {
+//       this->dependent_variable_names = {dependent_variable_name};
+//     } else {
+//       this->dependent_variable_names = {dependent_variable_name, status_variable_name};
+//     }
+//   }
 
-  // Set prediction mode
-  bool prediction_mode = false;
-  if (!load_forest_filename.empty()) {
-    prediction_mode = true;
-  }
+//   // Set prediction mode
+//   bool prediction_mode = false;
+//   if (!load_forest_filename.empty()) {
+//     prediction_mode = true;
+//   }
 
-  // Sample fraction default and convert to vector
-  if (sample_fraction == 0) {
-    if (sample_with_replacement) {
-      sample_fraction = DEFAULT_SAMPLE_FRACTION_REPLACE;
-    } else {
-      sample_fraction = DEFAULT_SAMPLE_FRACTION_NOREPLACE;
-    }
-  }
-  std::vector<double> sample_fraction_vector = { sample_fraction };
+//   // Sample fraction default and convert to vector
+//   if (sample_fraction == 0) {
+//     if (sample_with_replacement) {
+//       sample_fraction = DEFAULT_SAMPLE_FRACTION_REPLACE;
+//     } else {
+//       sample_fraction = DEFAULT_SAMPLE_FRACTION_NOREPLACE;
+//     }
+//   }
+//   std::vector<double> sample_fraction_vector = { sample_fraction };
 
-  if (prediction_mode) {
-    loadDependentVariableNamesFromFile(load_forest_filename);
-  }
+//   if (prediction_mode) {
+//     loadDependentVariableNamesFromFile(load_forest_filename);
+//   }
 
-  // Call other init function
-  init(loadDataFromFile(input_file), mtry, output_prefix, num_trees, seed, num_threads, importance_mode,
-      min_node_size, min_bucket, prediction_mode, sample_with_replacement, unordered_variable_names, memory_saving_splitting,
-      splitrule, predict_all, sample_fraction_vector, alpha, minprop, holdout, prediction_type, num_random_splits,
-      false, max_depth, regularization_factor, regularization_usedepth, use_grouped_variables, groups, splitmethod);
+//   // Call other init function
+//   init(loadDataFromFile(input_file), mtry, output_prefix, num_trees, seed, num_threads, importance_mode,
+//       min_node_size, min_bucket, prediction_mode, sample_with_replacement, unordered_variable_names, memory_saving_splitting,
+//       splitrule, predict_all, sample_fraction_vector, alpha, minprop, holdout, prediction_type, num_random_splits,
+//       false, max_depth, regularization_factor, regularization_usedepth, use_grouped_variables, groups, splitmethod);
 
-  if (prediction_mode) {
-    loadFromFile(load_forest_filename);
-  }
-  // Set variables to be always considered for splitting
-  if (!always_split_variable_names.empty()) {
-    setAlwaysSplitVariables(always_split_variable_names);
-  }
+//   if (prediction_mode) {
+//     loadFromFile(load_forest_filename);
+//   }
+//   // Set variables to be always considered for splitting
+//   if (!always_split_variable_names.empty()) {
+//     setAlwaysSplitVariables(always_split_variable_names);
+//   }
 
-  // TODO: Read 2d weights for tree-wise split select weights
-  // Load split select weights from file
-  if (!split_select_weights_file.empty()) {
-    std::vector<std::vector<double>> split_select_weights;
-    split_select_weights.resize(1);
-    loadDoubleVectorFromFile(split_select_weights[0], split_select_weights_file);
-    if (split_select_weights[0].size() != num_independent_variables) {
-      throw std::runtime_error("Number of split select weights is not equal to number of independent variables.");
-    }
-    setSplitWeightVector(split_select_weights);
-  }
+//   // TODO: Read 2d weights for tree-wise split select weights
+//   // Load split select weights from file
+//   if (!split_select_weights_file.empty()) {
+//     std::vector<std::vector<double>> split_select_weights;
+//     split_select_weights.resize(1);
+//     loadDoubleVectorFromFile(split_select_weights[0], split_select_weights_file);
+//     if (split_select_weights[0].size() != num_independent_variables) {
+//       throw std::runtime_error("Number of split select weights is not equal to number of independent variables.");
+//     }
+//     setSplitWeightVector(split_select_weights);
+//   }
 
-  // Load case weights from file
-  if (!case_weights_file.empty()) {
-    loadDoubleVectorFromFile(case_weights, case_weights_file);
-    if (case_weights.size() != num_samples) {
-      throw std::runtime_error("Number of case weights is not equal to number of samples.");
-    }
-  }
+//   // Load case weights from file
+//   if (!case_weights_file.empty()) {
+//     loadDoubleVectorFromFile(case_weights, case_weights_file);
+//     if (case_weights.size() != num_samples) {
+//       throw std::runtime_error("Number of case weights is not equal to number of samples.");
+//     }
+//   }
 
-  // Sample from non-zero weights in holdout mode
-  if (holdout && !case_weights.empty()) {
-    size_t nonzero_weights = 0;
-    for (auto& weight : case_weights) {
-      if (weight > 0) {
-        ++nonzero_weights;
-      }
-    }
-    this->sample_fraction[0] = this->sample_fraction[0] * ((double) nonzero_weights / (double) num_samples);
-  }
+//   // Sample from non-zero weights in holdout mode
+//   if (holdout && !case_weights.empty()) {
+//     size_t nonzero_weights = 0;
+//     for (auto& weight : case_weights) {
+//       if (weight > 0) {
+//         ++nonzero_weights;
+//       }
+//     }
+//     this->sample_fraction[0] = this->sample_fraction[0] * ((double) nonzero_weights / (double) num_samples);
+//   }
 
-  // Check if all catvars are coded in integers starting at 1
-  if (!unordered_variable_names.empty()) {
-    std::string error_message = checkUnorderedVariables(*data, unordered_variable_names);
-    if (!error_message.empty()) {
-      throw std::runtime_error(error_message);
-    }
-  }
-}
+//   // Check if all catvars are coded in integers starting at 1
+//   if (!unordered_variable_names.empty()) {
+//     std::string error_message = checkUnorderedVariables(*data, unordered_variable_names);
+//     if (!error_message.empty()) {
+//       throw std::runtime_error(error_message);
+//     }
+//   }
+// }
 // #nocov end
 
 void ForestGroup::initR(std::unique_ptr<Data> input_data, uint mtry, uint num_trees, std::ostream* verbose_out, uint seed,
@@ -193,6 +193,9 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
     uint max_depth, const std::vector<double>& regularization_factor, bool regularization_usedepth,
     // group specific arguments
     bool use_grouped_variables, Rcpp::List groups, std::string splitmethod) {
+
+  // TEST
+  printf(groups[1])
 
   // Initialize data with memmode
   this->data = std::move(input_data);

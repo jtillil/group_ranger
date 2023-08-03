@@ -873,6 +873,9 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
       stop("Error: Competing risks not supported yet. Use status=1 for events and status=0 for censoring.")
     }
   }
+
+  #### last group specific arguments
+  
   
   ## Call Ranger
   result <- rangerCpp(treetype, x, y.mat, independent.variable.names, mtry,

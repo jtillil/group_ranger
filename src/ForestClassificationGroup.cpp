@@ -24,7 +24,7 @@
 #include "Data.h"
 
 namespace ranger {
- 
+
 void ForestClassificationGroup::loadForest(size_t num_trees,
     std::vector<std::vector<std::vector<size_t>> >& forest_child_nodeIDs,
     std::vector<std::vector<size_t>>& forest_split_varIDs, std::vector<std::vector<double>>& forest_split_values,
