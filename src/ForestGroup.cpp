@@ -9,7 +9,6 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
-#include <Rcpp.h>
 #include <math.h>
 #include <algorithm>
 #include <stdexcept>
@@ -35,7 +34,7 @@ ForestGroup::ForestGroup() :
         false), prediction_type(DEFAULT_PREDICTIONTYPE), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(
         DEFAULT_MAXDEPTH), alpha(DEFAULT_ALPHA), minprop(DEFAULT_MINPROP), num_threads(DEFAULT_NUM_THREADS), data { }, overall_prediction_error(
         NAN), importance_mode(DEFAULT_IMPORTANCE_MODE), regularization_usedepth(false), progress(
-        0), use_grouped_variables(false), groups(NAN), splitmethod(DEFAULT_SPLITMETHOD) {
+        0), use_grouped_variables(false), groups(NAN), num_groups(0), splitmethod(DEFAULT_SPLITMETHOD) {
 }
 
 // #nocov start
@@ -49,7 +48,7 @@ ForestGroup::ForestGroup() :
 //     PredictionType prediction_type, uint num_random_splits, uint max_depth,
 //     const std::vector<double>& regularization_factor, bool regularization_usedepth,
 //     // group specific arguments
-//     bool use_grouped_variables, Rcpp::List groups, std::string splitmethod
+//     bool use_grouped_variables, std::vector<std::vector<int>> groups, std::string splitmethod
 //     ) {
 
 //   this->memory_mode = memory_mode;
@@ -148,7 +147,7 @@ void ForestGroup::initR(std::unique_ptr<Data> input_data, uint mtry, uint num_tr
     uint num_random_splits, bool order_snps, uint max_depth, const std::vector<double>& regularization_factor,
     bool regularization_usedepth,
     // group specific arguments
-    bool use_grouped_variables, Rcpp::List groups, std::string splitmethod) {
+    bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod) {
 
   this->verbose_out = verbose_out;
 
@@ -156,7 +155,7 @@ void ForestGroup::initR(std::unique_ptr<Data> input_data, uint mtry, uint num_tr
   init(std::move(input_data), mtry, "", num_trees, seed, num_threads, importance_mode, min_node_size, min_bucket,
       prediction_mode, sample_with_replacement, unordered_variable_names, memory_saving_splitting, splitrule,
       predict_all, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, order_snps, max_depth,
-      regularization_factor, regularization_usedepth, use_grouped_variables, groups, splitmethod);
+      regularization_factor, regularization_usedepth, use_grouped_variables, groups, num_groups, splitmethod);
 
   // Set variables to be always considered for splitting
   if (!always_split_variable_names.empty()) {
@@ -192,10 +191,11 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
     double alpha, double minprop, bool holdout, PredictionType prediction_type, uint num_random_splits, bool order_snps,
     uint max_depth, const std::vector<double>& regularization_factor, bool regularization_usedepth,
     // group specific arguments
-    bool use_grouped_variables, Rcpp::List groups, std::string splitmethod) {
+    bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod) {
 
   // TEST
-  printf("%f\n", groups[1]);
+
+  printf("%i\n", groups[1][1]);
 
   // Initialize data with memmode
   this->data = std::move(input_data);
@@ -239,6 +239,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
   this->regularization_usedepth = regularization_usedepth;
   this->use_grouped_variables = use_grouped_variables;
   this->groups = groups;
+  this->num_groups = num_groups;
   this->splitmethod = splitmethod;
 
   // Set number of samples and variables
@@ -260,7 +261,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
 
   // Check if mtry is in valid range
   if (this->mtry > num_independent_variables) {
-    throw std::runtime_error("mtry can not be larger than number of variables in data.");
+    throw std::runtime_error("mtry can not be larger than number of groups in data.");
   }
 
   // Check if any observations samples
@@ -337,6 +338,7 @@ void ForestGroup::writeOutput() {
     *verbose_out << "Number of trees:                   " << num_trees << std::endl;
     *verbose_out << "Sample size:                       " << num_samples << std::endl;
     *verbose_out << "Number of independent variables:   " << num_independent_variables << std::endl;
+    *verbose_out << "Number of groups:                  " << num_groups << std::endl;
     *verbose_out << "Mtry:                              " << mtry << std::endl;
     *verbose_out << "Target node size:                  " << min_node_size << std::endl;
     *verbose_out << "Variable importance mode:          " << importance_mode << std::endl;

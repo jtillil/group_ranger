@@ -27,8 +27,8 @@ public:
   TreeGroup();
 
   // Create from loaded forest
-  TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_varIDs,
-      std::vector<double>& split_values);
+  TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_groupIDs,
+      std::vector<double>& split_values, std::vector<std::vector<double>>& split_coefficients);
 
   virtual ~TreeGroup() = default;
 
@@ -41,7 +41,7 @@ public:
       std::vector<double>* case_weights, std::vector<size_t>* manual_inbag, bool keep_inbag,
       std::vector<double>* sample_fraction, double alpha, double minprop, bool holdout, uint num_random_splits,
       uint max_depth, std::vector<double>* regularization_factor, bool regularization_usedepth,
-      std::vector<bool>* split_varIDs_used);
+      std::vector<bool>* split_groupIDs_used);
 
   virtual void allocateMemory() = 0;
 
@@ -61,8 +61,8 @@ public:
   const std::vector<double>& getSplitValues() const {
     return split_values;
   }
-  const std::vector<size_t>& getSplitVarIDs() const {
-    return split_varIDs;
+  const std::vector<size_t>& getSplitGroupIDs() const {
+    return split_groupIDs;
   }
 
   const std::vector<size_t>& getOobSampleIDs() const {
@@ -77,10 +77,10 @@ public:
   }
 
 protected:
-  void createPossibleSplitVarSubset(std::vector<size_t>& result);
+  void createPossibleSplitGroupSubset(std::vector<size_t>& result);
 
   bool splitNode(size_t nodeID);
-  virtual bool splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_varIDs) = 0;
+  virtual bool splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) = 0;
 
   void createEmptyNode();
   virtual void createEmptyNodeInternal() = 0;
@@ -109,7 +109,7 @@ protected:
         varID = data->getUnpermutedVarID(varID);
       }
       if ((*regularization_factor)[varID] != 1) {
-        if (!(*split_varIDs_used)[varID]) {
+        if (!(*split_groupIDs_used)[varID]) {
           if (regularization_usedepth) {
             decrease *= std::pow((*regularization_factor)[varID], depth + 1);
           } else {
@@ -126,7 +126,7 @@ protected:
           varID = data->getUnpermutedVarID(varID);
         }
         if ((*regularization_factor)[varID] != 1) {
-          if (!(*split_varIDs_used)[varID]) {
+          if (!(*split_groupIDs_used)[varID]) {
             if (regularization_usedepth) {
               decrease /= std::pow((*regularization_factor)[varID], depth + 1);
             } else {
@@ -137,12 +137,12 @@ protected:
       }
     }
 
-  void saveSplitVarID(size_t varID) {
+  void saveSplitGroupID(size_t varID) {
     if (regularization) {
       if (importance_mode == IMP_GINI_CORRECTED) {
-        (*split_varIDs_used)[data->getUnpermutedVarID(varID)] = true;
+        (*split_groupIDs_used)[data->getUnpermutedVarID(varID)] = true;
       } else {
-        (*split_varIDs_used)[varID] = true;
+        (*split_groupIDs_used)[varID] = true;
       }
     }
   }
@@ -173,7 +173,7 @@ protected:
   const std::vector<size_t>* manual_inbag;
 
   // Splitting variable for each node
-  std::vector<size_t> split_varIDs;
+  std::vector<size_t> split_groupIDs;
 
   // Value to split at for each node, for now only binary split
   // For terminal nodes the prediction value is saved here
@@ -209,7 +209,7 @@ protected:
   bool regularization;
   std::vector<double>* regularization_factor;
   bool regularization_usedepth;
-  std::vector<bool>* split_varIDs_used;
+  std::vector<bool>* split_groupIDs_used;
   
   // Variable importance for all variables
   std::vector<double>* variable_importance;

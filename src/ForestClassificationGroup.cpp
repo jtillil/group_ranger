@@ -9,7 +9,6 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
-#include <Rcpp.h>
 #include <unordered_map>
 #include <algorithm>
 #include <iterator>
@@ -25,10 +24,14 @@
 
 namespace ranger {
 
-void ForestClassificationGroup::loadForest(size_t num_trees,
+void ForestClassificationGroup::loadForest(
+    size_t num_trees,
     std::vector<std::vector<std::vector<size_t>> >& forest_child_nodeIDs,
-    std::vector<std::vector<size_t>>& forest_split_varIDs, std::vector<std::vector<double>>& forest_split_values,
-    std::vector<double>& class_values, std::vector<bool>& is_ordered_variable) {
+    std::vector<std::vector<size_t>>& forest_split_varIDs, 
+    std::vector<std::vector<double>>& forest_split_values,
+    std::vector<std::vector<std::vector<double>>>& forest_split_coefficients,
+    std::vector<double>& class_values, 
+    std::vector<bool>& is_ordered_variable) {
 
   this->num_trees = num_trees;
   this->class_values = class_values;
@@ -39,7 +42,7 @@ void ForestClassificationGroup::loadForest(size_t num_trees,
   for (size_t i = 0; i < num_trees; ++i) {
     trees.push_back(
         std::make_unique<TreeClassificationGroup>(forest_child_nodeIDs[i], forest_split_varIDs[i], forest_split_values[i],
-            &this->class_values, &response_classIDs));
+           forest_split_coefficients[i], &this->class_values, &response_classIDs));
   }
 
   // Create thread ranges
@@ -50,7 +53,7 @@ void ForestClassificationGroup::initInternal() {
 
   // If mtry not set, use floored square root of number of independent variables.
   if (mtry == 0) {
-    unsigned long temp = sqrt((double) num_independent_variables);
+    unsigned long temp = sqrt((double) num_groups);
     mtry = std::max((unsigned long) 1, temp);
   }
 

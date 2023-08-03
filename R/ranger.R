@@ -240,7 +240,7 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
   ## Group structure
   if (use_grouped_variables && is.null(groups)) {
     ## variable groups
-    stop("Error: Group structure of predictors is required.")
+    stop("Error: Group structure of predictors is required when using grouped variables.")
   }
 
 #### Handle ranger arguments ####
@@ -890,7 +890,7 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
                       inbag, use.inbag, 
                       regularization.factor, use.regularization.factor, regularization.usedepth,
                       #### group specific arguments
-                      use_grouped_variables, groups, splitmethod)
+                      use_grouped_variables, groups, length(groups), splitmethod)
   
   if (length(result) == 0) {
     stop("User interrupt or internal error.")

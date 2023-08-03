@@ -65,7 +65,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     bool use_sparse_data, bool order_snps, bool oob_error, uint max_depth, 
     std::vector<std::vector<size_t>>& inbag, bool use_inbag,
     std::vector<double>& regularization_factor, bool use_regularization_factor, bool regularization_usedepth,
-    bool use_grouped_variables, Rcpp::List groups, std::string splitmethod) {
+    bool use_grouped_variables, Rcpp::List groups, uint num_groups, std::string splitmethod) {
   
   Rcpp::List result;
 
@@ -161,6 +161,13 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     SplitRule splitrule = (SplitRule) splitrule_r;
     PredictionType prediction_type = (PredictionType) prediction_type_r;
 
+    printf("You got until rewriting groups\n");
+
+    std::vector<std::vector<uint>> groups_internal;
+    for (int i = 0; i < num_groups; i++) {
+      groups_internal.push_back(groups[i]);
+    }
+
     printf("You got until initR\n");
 
     // Init Ranger
@@ -169,7 +176,8 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
           importance_mode, min_node_size, min_bucket, split_select_weights, always_split_variable_names,
           prediction_mode, sample_with_replacement, unordered_variable_names, save_memory, splitrule, case_weights,
           inbag, predict_all, keep_inbag, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, 
-          order_snps, max_depth, regularization_factor, regularization_usedepth, use_grouped_variables, groups, splitmethod);
+          order_snps, max_depth, regularization_factor, regularization_usedepth,
+          use_grouped_variables, groups_internal, num_groups, splitmethod);
     } else {
       forest->initR(std::move(data), mtry, num_trees, verbose_out, seed, num_threads,
           importance_mode, min_node_size, min_bucket, split_select_weights, always_split_variable_names,

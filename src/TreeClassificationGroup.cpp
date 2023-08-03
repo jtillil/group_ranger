@@ -9,7 +9,6 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
-#include <Rcpp.h>
 #include <unordered_map>
 #include <random>
 #include <algorithm>
@@ -29,9 +28,9 @@ TreeClassificationGroup::TreeClassificationGroup(std::vector<double>* class_valu
 }
 
 TreeClassificationGroup::TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs,
-    std::vector<size_t>& split_varIDs, std::vector<double>& split_values, std::vector<double>* class_values,
+    std::vector<size_t>& split_groupIDs, std::vector<double>& split_values, std::vector<std::vector<double>>& split_coefficients, std::vector<double>* class_values,
     std::vector<uint>* response_classIDs) :
-    TreeGroup(child_nodeIDs, split_varIDs, split_values), class_values(class_values), response_classIDs(response_classIDs), sampleIDs_per_class(
+    TreeGroup(child_nodeIDs, split_groupIDs, split_values, split_coefficients), class_values(class_values), response_classIDs(response_classIDs), sampleIDs_per_class(
         0), class_weights(0), counter { }, counter_per_class { } {
 }
 
@@ -75,7 +74,7 @@ void TreeClassificationGroup::appendToFileInternal(std::ofstream& file) { // #no
   // Empty on purpose
 } // #nocov end
 
-bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_varIDs) {
+bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) {
 
   // Stop if maximum node size or depth reached
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
@@ -104,9 +103,9 @@ bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_
   // Find best split, stop if no decrease of impurity
   bool stop;
   if (splitrule == EXTRATREES) {
-    stop = findBestSplitExtraTrees(nodeID, possible_split_varIDs);
+    stop = findBestSplitExtraTrees(nodeID, possible_split_groupIDs);
   } else {
-    stop = findBestSplit(nodeID, possible_split_varIDs);
+    stop = findBestSplit(nodeID, possible_split_groupIDs);
   }
 
   if (stop) {
@@ -143,7 +142,7 @@ double TreeClassificationGroup::computePredictionAccuracyInternal(std::vector<do
   return (1.0 - (double) num_missclassifications / (double) num_predictions);
 }
 
-bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_varIDs) {
+bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) {
 
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
   size_t num_classes = class_values->size();
@@ -163,7 +162,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& 
   if (num_samples_node >= 2 * min_bucket) {
 
     // For all possible split variables
-    for (auto& varID : possible_split_varIDs) {
+    for (auto& varID : possible_split_groupIDs) {
       // Find best split value, if ordered consider all values as split values, else all 2-partitions
       if (data->isOrderedVariable(varID)) {
 
@@ -195,7 +194,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& 
   }
 
   // Save best values
-  split_varIDs[nodeID] = best_varID;
+  split_groupIDs[nodeID] = best_varID;
   split_values[nodeID] = best_value;
 
   // Compute gini index for this node and to variable importance if needed
@@ -516,7 +515,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   }
 }
 
-bool TreeClassificationGroup::findBestSplitExtraTrees(size_t nodeID, std::vector<size_t>& possible_split_varIDs) {
+bool TreeClassificationGroup::findBestSplitExtraTrees(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) {
 
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
   size_t num_classes = class_values->size();
@@ -536,7 +535,7 @@ bool TreeClassificationGroup::findBestSplitExtraTrees(size_t nodeID, std::vector
   if (num_samples_node >= 2 * min_bucket) {
 
     // For all possible split variables
-    for (auto& varID : possible_split_varIDs) {
+    for (auto& varID : possible_split_groupIDs) {
       // Find best split value, if ordered consider all values as split values, else all 2-partitions
       if (data->isOrderedVariable(varID)) {
         findBestSplitValueExtraTrees(nodeID, varID, num_classes, class_counts, num_samples_node, best_value, best_varID,
@@ -554,7 +553,7 @@ bool TreeClassificationGroup::findBestSplitExtraTrees(size_t nodeID, std::vector
   }
 
   // Save best values
-  split_varIDs[nodeID] = best_varID;
+  split_groupIDs[nodeID] = best_varID;
   split_values[nodeID] = best_value;
 
   // Compute gini index for this node and to variable importance if needed

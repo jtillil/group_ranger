@@ -12,7 +12,6 @@
 #ifndef FORESTGROUP_H_
 #define FORESTGROUP_H_
 
-#include <Rcpp.h>
 #include <string>
 #include <vector>
 #include <iostream>
@@ -40,17 +39,17 @@ public:
   virtual ~ForestGroup() = default;
 
   // Init from c++ main or Rcpp from R
-  void initCpp(std::string dependent_variable_name, MemoryMode memory_mode, std::string input_file, uint mtry,
-      std::string output_prefix, uint num_trees, std::ostream* verbose_out, uint seed, uint num_threads,
-      std::string load_forest_filename, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
-      std::string split_select_weights_file, const std::vector<std::string>& always_split_variable_names,
-      std::string status_variable_name, bool sample_with_replacement,
-      const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
-      std::string case_weights_file, bool predict_all, double sample_fraction, double alpha, double minprop,
-      bool holdout, PredictionType prediction_type, uint num_random_splits, uint max_depth,
-      const std::vector<double>& regularization_factor, bool regularization_usedepth,
-      // group specific arguments
-      bool use_grouped_variables, Rcpp::List groups, std::string splitmethod);
+  // void initCpp(std::string dependent_variable_name, MemoryMode memory_mode, std::string input_file, uint mtry,
+  //     std::string output_prefix, uint num_trees, std::ostream* verbose_out, uint seed, uint num_threads,
+  //     std::string load_forest_filename, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
+  //     std::string split_select_weights_file, const std::vector<std::string>& always_split_variable_names,
+  //     std::string status_variable_name, bool sample_with_replacement,
+  //     const std::vector<std::string>& unordered_variable_names, bool memory_saving_splitting, SplitRule splitrule,
+  //     std::string case_weights_file, bool predict_all, double sample_fraction, double alpha, double minprop,
+  //     bool holdout, PredictionType prediction_type, uint num_random_splits, uint max_depth,
+  //     const std::vector<double>& regularization_factor, bool regularization_usedepth,
+  //     // group specific arguments
+  //     bool use_grouped_variables, Rcpp::List groups, std::string splitmethod);
   void initR(std::unique_ptr<Data> input_data, uint mtry, uint num_trees, std::ostream* verbose_out, uint seed,
       uint num_threads, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
       std::vector<std::vector<double>>& split_select_weights,
@@ -61,7 +60,7 @@ public:
       PredictionType prediction_type, uint num_random_splits, bool order_snps, uint max_depth,
       const std::vector<double>& regularization_factor, bool regularization_usedepth,
       // group specific arguments
-      bool use_grouped_variables, Rcpp::List groups, std::string splitmethod);
+      bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod);
   void init(std::unique_ptr<Data> input_data, uint mtry, std::string output_prefix,
       uint num_trees, uint seed, uint num_threads, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
       bool prediction_mode, bool sample_with_replacement, const std::vector<std::string>& unordered_variable_names,
@@ -69,7 +68,7 @@ public:
       double alpha, double minprop, bool holdout, PredictionType prediction_type, uint num_random_splits,
       bool order_snps, uint max_depth, const std::vector<double>& regularization_factor, bool regularization_usedepth,
       // group specific arguments
-      bool use_grouped_variables, Rcpp::List groups, std::string splitmethod);
+      bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod);
   virtual void initInternal() = 0;
 
   // Grow or predict
@@ -213,7 +212,8 @@ protected:
 
   // Group specific members
   bool use_grouped_variables;
-  Rcpp::List groups;
+  std::vector<std::vector<uint>> groups;
+  uint num_groups;
   std::string splitmethod;
 
   // MAXSTAT splitrule

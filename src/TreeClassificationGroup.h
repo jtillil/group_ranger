@@ -25,8 +25,8 @@ public:
       std::vector<std::vector<size_t>>* sampleIDs_per_class, std::vector<double>* class_weights);
 
   // Create from loaded forest
-  TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_varIDs,
-      std::vector<double>& split_values, std::vector<double>* class_values, std::vector<uint>* response_classIDs);
+  TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_groupIDs,
+      std::vector<double>& split_values, std::vector<std::vector<double>>& split_coefficients, std::vector<double>* class_values, std::vector<uint>* response_classIDs);
 
   TreeClassificationGroup(const TreeClassificationGroup&) = delete;
   TreeClassificationGroup& operator=(const TreeClassificationGroup&) = delete;
@@ -49,13 +49,13 @@ public:
   }
 
 private:
-  bool splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_varIDs) override;
+  bool splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) override;
   void createEmptyNodeInternal() override;
 
   double computePredictionAccuracyInternal(std::vector<double>* prediction_error_casewise) override;
 
-  // Called by splitNodeInternal(). Sets split_varIDs and split_values.
-  bool findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_varIDs);
+  // Called by splitNodeInternal(). Sets split_groupIDs and split_values.
+  bool findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_groupIDs);
   void findBestSplitValueSmallQ(size_t nodeID, size_t varID, size_t num_classes,
       const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, size_t& best_varID,
       double& best_decrease);
@@ -70,7 +70,7 @@ private:
       const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, size_t& best_varID,
       double& best_decrease);
 
-  bool findBestSplitExtraTrees(size_t nodeID, std::vector<size_t>& possible_split_varIDs);
+  bool findBestSplitExtraTrees(size_t nodeID, std::vector<size_t>& possible_split_groupIDs);
   void findBestSplitValueExtraTrees(size_t nodeID, size_t varID, size_t num_classes,
       const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, size_t& best_varID,
       double& best_decrease);

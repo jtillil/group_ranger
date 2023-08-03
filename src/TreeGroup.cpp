@@ -9,7 +9,6 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
-#include <Rcpp.h>
 #include <iterator>
 
 #include "TreeGroup.h"
@@ -20,17 +19,17 @@ namespace ranger {
 TreeGroup::TreeGroup() :
     mtry(0), num_samples(0), num_samples_oob(0), min_node_size(0), min_bucket(0), deterministic_varIDs(0), split_select_weights(0), case_weights(
         0), manual_inbag(0), oob_sampleIDs(0), holdout(false), keep_inbag(false), data(0), regularization_factor(0), regularization_usedepth(
-        false), split_varIDs_used(0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(
+        false), split_groupIDs_used(0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(
         true), sample_fraction(0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
         0) {
 }
 
-TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_varIDs,
-    std::vector<double>& split_values) :
+TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_groupIDs,
+    std::vector<double>& split_values, std::vector<std::vector<double>>& split_coefficients) :
     mtry(0), num_samples(0), num_samples_oob(0), min_node_size(0), min_bucket(0), deterministic_varIDs(0), split_select_weights(0), case_weights(
-        0), manual_inbag(0), split_varIDs(split_varIDs), split_values(split_values), child_nodeIDs(child_nodeIDs), oob_sampleIDs(
-        0), holdout(false), keep_inbag(false), data(0), regularization_factor(0), regularization_usedepth(false), split_varIDs_used(
+        0), manual_inbag(0), split_groupIDs(split_groupIDs), split_values(split_values), child_nodeIDs(child_nodeIDs), oob_sampleIDs(
+        0), holdout(false), keep_inbag(false), data(0), regularization_factor(0), regularization_usedepth(false), split_groupIDs_used(
         0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(true), sample_fraction(
         0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
@@ -42,7 +41,8 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
     bool sample_with_replacement, bool memory_saving_splitting, SplitRule splitrule, std::vector<double>* case_weights,
     std::vector<size_t>* manual_inbag, bool keep_inbag, std::vector<double>* sample_fraction, double alpha,
     double minprop, bool holdout, uint num_random_splits, uint max_depth, std::vector<double>* regularization_factor,
-    bool regularization_usedepth, std::vector<bool>* split_varIDs_used) {
+    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used,
+    ) {
 
   this->data = data;
   this->mtry = mtry;
@@ -75,7 +75,7 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
   this->max_depth = max_depth;
   this->regularization_factor = regularization_factor;
   this->regularization_usedepth = regularization_usedepth;
-  this->split_varIDs_used = split_varIDs_used;
+  this->split_groupIDs_used = split_groupIDs_used;
 
   // Regularization
   if (regularization_factor->size() > 0) {
@@ -132,7 +132,7 @@ void TreeGroup::grow(std::vector<double>* variable_importance) {
       if (i >= last_left_nodeID) {
         // If new level, increase depth
         // (left_node saves left-most node in current level, new level reached if that node is splitted)
-        last_left_nodeID = split_varIDs.size() - 2;
+        last_left_nodeID = split_groupIDs.size() - 2;
         ++depth;
       }
     }
@@ -173,10 +173,10 @@ void TreeGroup::predict(const Data* prediction_data, bool oob_prediction) {
       }
 
       // Move to child
-      size_t split_varID = split_varIDs[nodeID];
+      size_t split_groupID = split_groupIDs[nodeID];
 
-      double value = prediction_data->get_x(sample_idx, split_varID);
-      if (prediction_data->isOrderedVariable(split_varID)) {
+      double value = prediction_data->get_x(sample_idx, split_groupID);
+      if (prediction_data->isOrderedVariable(split_groupID)) {
         if (value <= split_values[nodeID]) {
           // Move to left child
           nodeID = child_nodeIDs[0][nodeID];
@@ -232,8 +232,8 @@ void TreeGroup::computePermutationImportance(std::vector<double>& forest_importa
     // Check whether the i-th variable is used in the
 	  // tree:
     bool isused = false;
-    for (size_t j = 0; j < split_varIDs.size(); ++j) {
-      if (split_varIDs[j] == i) {
+    for (size_t j = 0; j < split_groupIDs.size(); ++j) {
+      if (split_groupIDs[j] == i) {
         isused = true;
         break;
       }
@@ -272,7 +272,7 @@ void TreeGroup::appendToFile(std::ofstream& file) {
 
   // Save general fields
   saveVector2D(child_nodeIDs, file);
-  saveVector1D(split_varIDs, file);
+  saveVector1D(split_groupIDs, file);
   saveVector1D(split_values, file);
 
   // Call special functions for subclasses to save special fields.
@@ -280,24 +280,24 @@ void TreeGroup::appendToFile(std::ofstream& file) {
 }
 // #nocov end
 
-void TreeGroup::createPossibleSplitVarSubset(std::vector<size_t>& result) {
+void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
 
-  size_t num_vars = data->getNumCols();
+  // size_t num_groups = data->getNumCols();
 
   // For corrected Gini importance add dummy variables
   if (importance_mode == IMP_GINI_CORRECTED) {
-    num_vars += data->getNumCols();
+    num_groups += data->getNumCols();
   }
 
   // Randomly add non-deterministic variables (according to weights if needed)
   if (split_select_weights->empty()) {
     if (deterministic_varIDs->empty()) {
-      drawWithoutReplacement(result, random_number_generator, num_vars, mtry);
+      drawWithoutReplacement(result, random_number_generator, num_groups, mtry);
     } else {
-      drawWithoutReplacementSkip(result, random_number_generator, num_vars, (*deterministic_varIDs), mtry);
+      drawWithoutReplacementSkip(result, random_number_generator, num_groups, (*deterministic_varIDs), mtry);
     }
   } else {
-    drawWithoutReplacementWeighted(result, random_number_generator, num_vars, mtry, *split_select_weights);
+    drawWithoutReplacementWeighted(result, random_number_generator, num_groups, mtry, *split_select_weights);
   }
 
   // Always use deterministic variables
@@ -307,40 +307,40 @@ void TreeGroup::createPossibleSplitVarSubset(std::vector<size_t>& result) {
 bool TreeGroup::splitNode(size_t nodeID) {
 
   // Select random subset of variables to possibly split at
-  std::vector<size_t> possible_split_varIDs;
-  createPossibleSplitVarSubset(possible_split_varIDs);
+  std::vector<size_t> possible_split_groupIDs;
+  createPossibleSplitGroupSubset(possible_split_groupIDs);
 
-  // Call subclass method, sets split_varIDs and split_values
-  bool stop = splitNodeInternal(nodeID, possible_split_varIDs);
+  // Call subclass method, sets split_groupIDs and split_values
+  bool stop = splitNodeInternal(nodeID, possible_split_groupIDs);
   if (stop) {
     // Terminal node
     return true;
   }
 
-  size_t split_varID = split_varIDs[nodeID];
+  size_t split_groupID = split_groupIDs[nodeID];
   double split_value = split_values[nodeID];
 
   // Save non-permuted variable for prediction
-  split_varIDs[nodeID] = data->getUnpermutedVarID(split_varID);
+  split_groupIDs[nodeID] = data->getUnpermutedVarID(split_groupID);
 
   // Create child nodes
-  size_t left_child_nodeID = split_varIDs.size();
+  size_t left_child_nodeID = split_groupIDs.size();
   child_nodeIDs[0][nodeID] = left_child_nodeID;
   createEmptyNode();
   start_pos[left_child_nodeID] = start_pos[nodeID];
 
-  size_t right_child_nodeID = split_varIDs.size();
+  size_t right_child_nodeID = split_groupIDs.size();
   child_nodeIDs[1][nodeID] = right_child_nodeID;
   createEmptyNode();
   start_pos[right_child_nodeID] = end_pos[nodeID];
 
   // For each sample in node, assign to left or right child
-  if (data->isOrderedVariable(split_varID)) {
+  if (data->isOrderedVariable(split_groupID)) {
     // Ordered: left is <= splitval and right is > splitval
     size_t pos = start_pos[nodeID];
     while (pos < start_pos[right_child_nodeID]) {
       size_t sampleID = sampleIDs[pos];
-      if (data->get_x(sampleID, split_varID) <= split_value) {
+      if (data->get_x(sampleID, split_groupID) <= split_value) {
         // If going to left, do nothing
         ++pos;
       } else {
@@ -354,7 +354,7 @@ bool TreeGroup::splitNode(size_t nodeID) {
     size_t pos = start_pos[nodeID];
     while (pos < start_pos[right_child_nodeID]) {
       size_t sampleID = sampleIDs[pos];
-      double level = data->get_x(sampleID, split_varID);
+      double level = data->get_x(sampleID, split_groupID);
       size_t factorID = floor(level) - 1;
       size_t splitID = floor(split_value);
 
@@ -379,7 +379,7 @@ bool TreeGroup::splitNode(size_t nodeID) {
 }
 
 void TreeGroup::createEmptyNode() {
-  split_varIDs.push_back(0);
+  split_groupIDs.push_back(0);
   split_values.push_back(0);
   child_nodeIDs[0].push_back(0);
   child_nodeIDs[1].push_back(0);
@@ -396,15 +396,15 @@ size_t TreeGroup::dropDownSamplePermuted(size_t permuted_varID, size_t sampleID,
   while (child_nodeIDs[0][nodeID] != 0 || child_nodeIDs[1][nodeID] != 0) {
 
     // Permute if variable is permutation variable
-    size_t split_varID = split_varIDs[nodeID];
+    size_t split_groupID = split_groupIDs[nodeID];
     size_t sampleID_final = sampleID;
-    if (split_varID == permuted_varID) {
+    if (split_groupID == permuted_varID) {
       sampleID_final = permuted_sampleID;
     }
 
     // Move to child
-    double value = data->get_x(sampleID_final, split_varID);
-    if (data->isOrderedVariable(split_varID)) {
+    double value = data->get_x(sampleID_final, split_groupID);
+    if (data->isOrderedVariable(split_groupID)) {
       if (value <= split_values[nodeID]) {
         // Move to left child
         nodeID = child_nodeIDs[0][nodeID];
