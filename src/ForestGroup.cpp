@@ -195,7 +195,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
     bool use_grouped_variables, Rcpp::List groups, std::string splitmethod) {
 
   // TEST
-  printf("%f\n", groups[1][2]);
+  printf("%f\n", groups[1]);
 
   // Initialize data with memmode
   this->data = std::move(input_data);
