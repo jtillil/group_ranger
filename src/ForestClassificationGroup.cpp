@@ -323,7 +323,7 @@ void ForestClassificationGroup::loadFromFileInternal(std::ifstream& infile) {
 
     // Create tree
     trees.push_back(
-        std::make_unique<TreeClassificationGroup>(child_nodeIDs, split_varIDs, split_values, &class_values, &response_classIDs));
+        std::make_unique<TreeClassificationGroup>(child_nodeIDs, split_varIDs, split_values, split_coefficients, &class_values, &response_classIDs));
   }
 }
 
