@@ -197,9 +197,11 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
 
       if (treetype == TREE_CLASSIFICATION) {
         if (use_grouped_variables) {
+          std::vector<std::vector<std::vector<double>>> split_coefficients = loaded_forest["split.coefficients"];
+
           std::vector<double> class_values = loaded_forest["class.values"];
           auto& temp = dynamic_cast<ForestClassificationGroup&>(*forestgroup);
-          temp.loadForest(num_trees, child_nodeIDs, split_varIDs, split_values, class_values, is_ordered);
+          temp.loadForest(num_trees, child_nodeIDs, split_varIDs, split_values, split_coefficients, class_values, is_ordered);
         } else {
           std::vector<double> class_values = loaded_forest["class.values"];
           auto& temp = dynamic_cast<ForestClassification&>(*forest);
