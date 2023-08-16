@@ -281,7 +281,7 @@ void TreeGroup::appendToFile(std::ofstream& file) {
 
 void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
 
-  // size_t num_groups = data->getNumCols();
+  size_t num_groups = data->getNumCols();
 
   // For corrected Gini importance add dummy variables
   if (importance_mode == IMP_GINI_CORRECTED) {
