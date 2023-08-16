@@ -175,9 +175,13 @@ protected:
   // Splitting variable for each node
   std::vector<size_t> split_groupIDs;
 
-  // Value to split at for each node, for now only binary split
+  // Value to split at for each node, defines position of the separation hyperplane
   // For terminal nodes the prediction value is saved here
   std::vector<double> split_values;
+
+  // Values to split at for each node, defines the separation hyperplane
+  // For terminal nodes nothing is saved here
+  std::vector<std::vector<double>> split_coefficients;
 
   // Vector of left and right child node IDs, 0 for no child
   std::vector<std::vector<size_t>> child_nodeIDs;
