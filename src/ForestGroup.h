@@ -92,7 +92,7 @@ public:
     }
     return result;
   }
-  std::vector<std::vector<size_t>> getSplitVarIDs() {
+  std::vector<std::vector<size_t>> getSplitGroupIDs() {
     std::vector<std::vector<size_t>> result;
     for (auto& tree : trees) {
       result.push_back(tree->getSplitGroupIDs());
