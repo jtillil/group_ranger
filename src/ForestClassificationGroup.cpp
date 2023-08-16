@@ -315,6 +315,8 @@ void ForestClassificationGroup::loadFromFileInternal(std::ifstream& infile) {
     readVector1D(split_varIDs, infile);
     std::vector<double> split_values;
     readVector1D(split_values, infile);
+    std::vector<std::vector<double>> split_coefficients;
+    readVector2D(split_coefficients, infile);
 
     // If dependent variable not in test data, throw error
     if (num_variables_saved != num_independent_variables) {
