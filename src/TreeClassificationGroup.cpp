@@ -203,7 +203,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& 
   }
 
   // Regularization
-  saveSplitVarID(best_varID);
+  saveSplitGroupID(best_varID);
 
   return false;
 }
@@ -562,7 +562,7 @@ bool TreeClassificationGroup::findBestSplitExtraTrees(size_t nodeID, std::vector
   }
 
   // Regularization
-  saveSplitVarID(best_varID);
+  saveSplitGroupID(best_varID);
 
   return false;
 }
