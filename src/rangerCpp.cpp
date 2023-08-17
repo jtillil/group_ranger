@@ -389,7 +389,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     }
   } catch (std::exception& e) {
     if (strcmp(e.what(), "User interrupt.") != 0) {
-      Rprintf(e.what());
+      // Rprintf(e.what());
       Rcpp::Rcerr << "Error: " << e.what() << " Ranger will EXIT now." << std::endl;
     }
     return result;
