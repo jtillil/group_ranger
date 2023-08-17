@@ -388,9 +388,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       delete verbose_out;
     }
   } catch (std::exception& e) {
-    if (strcmp(e.what(), "User interrupt.") != 0) {
+    // if (strcmp(e.what(), "User interrupt.") != 0) {
       Rcpp::Rcerr << "Error: " << e.what() << " Ranger will EXIT now." << std::endl;
-    }
+    // }
     return result;
   }
 
