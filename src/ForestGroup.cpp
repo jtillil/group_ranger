@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include <ctime>
 #include <functional>
 #include <thread>

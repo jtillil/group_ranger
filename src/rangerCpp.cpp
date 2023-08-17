@@ -28,6 +28,7 @@
 #include <Rcpp.h>
 #include <RcppEigen.h>
 #include <vector>
+#include <string>
 #include <sstream>
 #include <memory>
 #include <utility>

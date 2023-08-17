@@ -10,6 +10,7 @@
  #-------------------------------------------------------------------------------*/
 
 #include <iterator>
+#include <vector>
 
 #include "TreeGroup.h"
 #include "utility.h"

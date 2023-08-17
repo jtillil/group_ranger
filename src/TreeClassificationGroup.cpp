@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
+#include <vector>
 
 #include "TreeClassificationGroup.h"
 #include "utility.h" 

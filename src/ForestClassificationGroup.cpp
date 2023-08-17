@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include <cmath>
 #include <string>
+#include <vector>
 
 #include "utility.h"
 #include "ForestClassificationGroup.h"
