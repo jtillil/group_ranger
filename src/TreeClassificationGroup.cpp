@@ -26,6 +26,12 @@ TreeClassificationGroup::TreeClassificationGroup(std::vector<double>* class_valu
     std::vector<std::vector<size_t>>* sampleIDs_per_class, std::vector<double>* class_weights) :
     class_values(class_values), response_classIDs(response_classIDs), sampleIDs_per_class(sampleIDs_per_class), class_weights(
         class_weights), counter(0), counter_per_class(0) {
+// TreeClassificationGroup::TreeClassificationGroup(std::vector<double>* class_values, std::vector<uint>* response_classIDs,
+//     std::vector<std::vector<size_t>>* sampleIDs_per_class, std::vector<double>* class_weights,
+//     bool& use_grouped_variables, std::vector<std::vector<uint>>& groups,
+//     uint& num_groups, std::string& splitmethod) :
+//     class_values(class_values), response_classIDs(response_classIDs), sampleIDs_per_class(sampleIDs_per_class), class_weights(
+//         class_weights), use_grouped_variables(use_grouped_variables), groups(groups) counter(0), counter_per_class(0) {
 }
 
 TreeClassificationGroup::TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs,
@@ -75,7 +81,7 @@ void TreeClassificationGroup::appendToFileInternal(std::ofstream& file) { // #no
   // Empty on purpose
 } // #nocov end
 
-bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) {
+bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs, std::string& splitmethod) {
 
   // Stop if maximum node size or depth reached
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
@@ -84,7 +90,7 @@ bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_
     return true;
   }
 
-  // Check if node is pure and set split_value to estimate and stop if pure
+  // Check if node is pure
   bool pure = true;
   double pure_value = 0;
   for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
@@ -96,6 +102,7 @@ bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_
     }
     pure_value = value;
   }
+  // Set split_value to estimate and stop if pure
   if (pure) {
     split_values[nodeID] = pure_value;
     return true;
@@ -106,7 +113,7 @@ bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_
   if (splitrule == EXTRATREES) {
     stop = findBestSplitExtraTrees(nodeID, possible_split_groupIDs);
   } else {
-    stop = findBestSplit(nodeID, possible_split_groupIDs);
+    stop = findBestSplit(nodeID, possible_split_groupIDs, splitmethod);
   }
 
   if (stop) {
@@ -143,7 +150,7 @@ double TreeClassificationGroup::computePredictionAccuracyInternal(std::vector<do
   return (1.0 - (double) num_missclassifications / (double) num_predictions);
 }
 
-bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) {
+bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_groupIDs, std::string& splitmethod) {
 
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
   size_t num_classes = class_values->size();
@@ -185,7 +192,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& 
       //   }
       // } else {
         findBestSplitValueUnordered(nodeID, groupID, num_classes, class_counts, num_samples_node, best_value, best_coefficients, best_groupID,
-            best_decrease);
+            best_decrease, splitmethod);
       // }
     }
   }
@@ -425,7 +432,7 @@ void TreeClassificationGroup::findBestSplitValueLargeQ(size_t nodeID, size_t var
 
 void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t groupID, size_t num_classes,
     const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, size_t& best_groupID,
-    double& best_decrease) {
+    double& best_decrease, std::string& splitmethod) {
 
   // // Create possible split values
   // std::vector<double> factor_levels;
@@ -443,7 +450,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   // // Split where all left (0) or all right (1) are excluded
   // // The second half of numbers is just left/right switched the first half -> Exclude second half
   // for (size_t local_splitID = 1; local_splitID < num_splits / 2; ++local_splitID) {
-  for (size_t local_splitGroupID = 1; local_splitGroupID < num_groups / 2; ++local_splitGroupID) {
+  // for (size_t local_splitGroupID = 1; local_splitGroupID < num_groups / 2; ++local_splitGroupID) {
 
   //   // Compute overall splitID by shifting local factorIDs to global positions
   //   size_t splitID = 0;
@@ -476,9 +483,17 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     size_t n_left = num_samples_node - n_right;
 
     // Stop if minimal bucket size reached
-    if (n_left < min_bucket || n_right < min_bucket) {
-      continue;
+    // if (n_left < min_bucket || n_right < min_bucket) {
+    //   continue;
+    // }
+
+    // Get group-specific x and node-specific y values
+
+    // Calculate split hyperplane
+    if (splitmethod == "LDA") {
+      std::vector hyperplane = LDA(x, y);
     }
+    
 
   //   double decrease;
   //   if (splitrule == HELLINGER) {

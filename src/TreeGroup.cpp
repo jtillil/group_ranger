@@ -42,7 +42,8 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
     bool sample_with_replacement, bool memory_saving_splitting, SplitRule splitrule, std::vector<double>* case_weights,
     std::vector<size_t>* manual_inbag, bool keep_inbag, std::vector<double>* sample_fraction, double alpha,
     double minprop, bool holdout, uint num_random_splits, uint max_depth, std::vector<double>* regularization_factor,
-    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used) {
+    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool use_grouped_variables,
+    std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod) {
 
   this->data = data;
   this->mtry = mtry;
@@ -76,6 +77,10 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
   this->regularization_factor = regularization_factor;
   this->regularization_usedepth = regularization_usedepth;
   this->split_groupIDs_used = split_groupIDs_used;
+  this->use_grouped_variables = use_grouped_variables;
+  this->groups = groups;
+  this->num_groups = num_groups;
+  this->splitmethod = splitmethod;
 
   // Regularization
   if (regularization_factor->size() > 0) {
@@ -283,11 +288,12 @@ void TreeGroup::appendToFile(std::ofstream& file) {
 void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
 
   // size_t num_groups = data->getNumCols();
-  
+  // Just take num_groups argument passed down from forest
 
   // For corrected Gini importance add dummy variables
   if (importance_mode == IMP_GINI_CORRECTED) {
-    num_groups += data->getNumCols();
+    // num_groups += data->getNumCols();
+    num_groups += num_groups;
   }
 
   // Randomly add non-deterministic variables (according to weights if needed)
@@ -311,7 +317,7 @@ bool TreeGroup::splitNode(size_t nodeID) {
   std::vector<size_t> possible_split_groupIDs;
   createPossibleSplitGroupSubset(possible_split_groupIDs);
 
-  // Call subclass method, sets split_groupIDs and split_values
+  // Call subclass method, sets split_groupIDs and calculates hyperplane
   bool stop = splitNodeInternal(nodeID, possible_split_groupIDs);
   if (stop) {
     // Terminal node

@@ -41,7 +41,8 @@ public:
       std::vector<double>* case_weights, std::vector<size_t>* manual_inbag, bool keep_inbag,
       std::vector<double>* sample_fraction, double alpha, double minprop, bool holdout, uint num_random_splits,
       uint max_depth, std::vector<double>* regularization_factor, bool regularization_usedepth,
-      std::vector<bool>* split_groupIDs_used);
+      std::vector<bool>* split_groupIDs_used, bool use_grouped_variables,
+    std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod);
 
   virtual void allocateMemory() = 0;
 
@@ -80,7 +81,7 @@ protected:
   void createPossibleSplitGroupSubset(std::vector<size_t>& result);
 
   bool splitNode(size_t nodeID);
-  virtual bool splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) = 0;
+  virtual bool splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs, std::string& splitmethod) = 0;
 
   void createEmptyNode();
   virtual void createEmptyNodeInternal() = 0;
@@ -234,6 +235,12 @@ protected:
   uint max_depth;
   uint depth;
   size_t last_left_nodeID;
+
+  // Group specific members
+  bool use_grouped_variables;
+  std::vector<std::vector<uint>> groups;
+  uint num_groups;
+  std::string splitmethod;
 };
 
 } // namespace ranger
