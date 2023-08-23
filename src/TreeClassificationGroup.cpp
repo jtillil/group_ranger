@@ -9,6 +9,7 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
+#include <Rcpp.h>
 #include <unordered_map>
 #include <random>
 #include <algorithm>
@@ -492,9 +493,10 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
 
     // Calculate split hyperplane
     if (splitmethod == "LDA") {
-      std::vector hyperplane = LDA(x, y);
+      std::vector hyperplane = LDA(x1, x2);
+    } else {
+      Rcpp::Rcerr << "Error: " << "unknown splitmethod for grouped variables." << " Ranger will EXIT now." << std::endl;
     }
-    
 
   //   double decrease;
   //   if (splitrule == HELLINGER) {

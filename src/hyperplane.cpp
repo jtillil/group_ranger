@@ -29,7 +29,7 @@
 
 namespace ranger {
 
-std::vector<double> LDA(Eigen::MatrixXf x, Eigen::VectorXf y) {
+std::vector<double> LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
 
     // ## Calculate class means
     // mean0 <- colMeans(as.matrix(data_values[response == 0,]))
@@ -42,26 +42,24 @@ std::vector<double> LDA(Eigen::MatrixXf x, Eigen::VectorXf y) {
     // MatrixXd centered = mat.rowwise() - mat.colwise().mean();
     // MatrixXd cov = (centered.adjoint() * centered) / double(mat.rows() - 1);
 
-    // Split up x matrix
-    mat1 = 2;
-    mat2 = 3;
-
-    // Calculate class-specific means
-    mean1 = ;
-    mean2 = ;
+    // Calculate class-specific means and sizes
+    Eigen::VectorXf mean1 = x1.colwise().mean();
+    Eigen::VectorXf mean2 = x2.colwise().mean();
 
     // Calculate class-specific covariance matrices
-    Eigen::MatrixXf centered1 = mat1.rowwise() - mat1.colwise().mean();
-    Eigen::MatrixXf covmat1 = (centered1.adjoint() * centered1) / double(mat1.rows() - 1);
-    Eigen::MatrixXf centered2 = mat2.rowwise() - mat2.colwise().mean();
-    Eigen::MatrixXf covmat2 = (centered2.adjoint() * centered2) / double(mat2.rows() - 1);
+    Eigen::MatrixXf centered1 = x1.rowwise() - mean1;
+    Eigen::MatrixXf covmat1 = (centered1.adjoint() * centered1) / double(x1.rows() - 1);
+    Eigen::MatrixXf centered2 = x2.rowwise() - mean2;
+    Eigen::MatrixXf covmat2 = (centered2.adjoint() * centered2) / double(x2.rows() - 1);
 
     // Weighted mean covariance matrix
-
+    Eigen::MatrixXf covmat = x1.rows()/(x1.rows()+x2.rows()) * covmat1 + x2.rows()/(x1.rows()+x2.rows()) * covmat2;
 
     // Calculate coefs and val
-    std::vector<double> hyperplane = {1};
-    double val = (hyperplane * (0.5*(mean1 + mean0))).sum();
+    Eigen::MatrixXf hyperplane = covmat.inverse() * (mean1 - mean2);
+    double val = (hyperplane * (0.5*(mean1 + mean2))).sum();
+
+    
     hyperplane.push_back(val)
 
     return hyperplane;
