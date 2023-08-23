@@ -19,6 +19,7 @@
 #include "TreeClassificationGroup.h"
 #include "utility.h" 
 #include "Data.h"
+#include "hyperplane.h"
 
 namespace ranger {
 

@@ -30,10 +30,11 @@
 
 #include "globals.h"
 #include "Data.h"
+#include "Eigen/Dense"
 
 namespace ranger {
 
-std::vector<double> LDA(std::vector<double> x, std::vector<double> y);
+std::vector<double> LDA(Eigen::MatrixXf x, Eigen::VectorXf y) {}
 
 }
 
