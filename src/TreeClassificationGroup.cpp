@@ -172,7 +172,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& 
 // Stop early if no split posssible
   if (num_samples_node >= 2 * min_bucket) {
 
-    // For all possible split variables
+    // For all possible split groups
     for (auto& groupID : possible_split_groupIDs) {
       // Find best split value, if ordered consider all values as split values, else all 2-partitions
       // if (data->isOrderedVariable(varID)) {
@@ -464,25 +464,25 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   //     }
   //   }
 
-    // Initialize
-    std::vector<size_t> class_counts_right(num_classes);
-    size_t n_right = 0;
+    // // Initialize
+    // std::vector<size_t> class_counts_right(num_classes);
+    // size_t n_right = 0;
 
-    // Count classes in left and right child
-    for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
-      size_t sampleID = sampleIDs[pos];
-      uint sample_classID = (*response_classIDs)[sampleID];
-      double value = data->get_x(sampleID, varID);
-      size_t factorID = floor(value) - 1;
+    // // Count classes in left and right child
+    // for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
+    //   size_t sampleID = sampleIDs[pos];
+    //   uint sample_classID = (*response_classIDs)[sampleID];
+    //   double value = data->get_x(sampleID, varID);
+    //   size_t factorID = floor(value) - 1;
 
-      // If in right child, count
-      // In right child, if bitwise splitID at position factorID is 1
-      if ((splitID & (1ULL << factorID))) {
-        ++n_right;
-        ++class_counts_right[sample_classID];
-      }
-    }
-    size_t n_left = num_samples_node - n_right;
+    //   // If in right child, count
+    //   // In right child, if bitwise splitID at position factorID is 1
+    //   if ((splitID & (1ULL << factorID))) {
+    //     ++n_right;
+    //     ++class_counts_right[sample_classID];
+    //   }
+    // }
+    // size_t n_left = num_samples_node - n_right;
 
     // Stop if minimal bucket size reached
     // if (n_left < min_bucket || n_right < min_bucket) {
@@ -492,54 +492,52 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // Get group-specific x and node-specific y values
 
     // Calculate split hyperplane
+    std::vector<double> hyperplane;
     if (splitmethod == "LDA") {
-      std::vector hyperplane = LDA(x1, x2);
+      success = LDA(x1, x2);
     } else {
       Rcpp::Rcerr << "Error: " << "unknown splitmethod for grouped variables." << " Ranger will EXIT now." << std::endl;
     }
 
-  //   double decrease;
-  //   if (splitrule == HELLINGER) {
-  //     // TPR is number of outcome 1s in one node / total number of 1s
-  //     // FPR is number of outcome 0s in one node / total number of 0s
-  //     double tpr = (double) class_counts_right[1] / (double) class_counts[1];
-  //     double fpr = (double) class_counts_right[0] / (double) class_counts[0];
+    // Calculate decrease
+    double decrease;
+    // if (splitrule == HELLINGER) {
+    //   // TPR is number of outcome 1s in one node / total number of 1s
+    //   // FPR is number of outcome 0s in one node / total number of 0s
+    //   double tpr = (double) class_counts_right[1] / (double) class_counts[1];
+    //   double fpr = (double) class_counts_right[0] / (double) class_counts[0];
 
-  //     // Decrease of impurity
-  //     double a1 = sqrt(tpr) - sqrt(fpr);
-  //     double a2 = sqrt(1 - tpr) - sqrt(1 - fpr);
-  //     decrease = sqrt(a1 * a1 + a2 * a2);
-  //   } else {
-  //     // Sum of squares
-  //     double sum_left = 0;
-  //     double sum_right = 0;
-  //     for (size_t j = 0; j < num_classes; ++j) {
-  //       size_t class_count_right = class_counts_right[j];
-  //       size_t class_count_left = class_counts[j] - class_count_right;
+    //   // Decrease of impurity
+    //   double a1 = sqrt(tpr) - sqrt(fpr);
+    //   double a2 = sqrt(1 - tpr) - sqrt(1 - fpr);
+    //   decrease = sqrt(a1 * a1 + a2 * a2);
+    // } else {
+      // Sum of squares
+      double sum_left = 0;
+      double sum_right = 0;
+      for (size_t j = 0; j < num_classes; ++j) {
+        size_t class_count_right = class_counts_right[j];
+        size_t class_count_left = class_counts[j] - class_count_right;
 
-  //       sum_right += (*class_weights)[j] * class_count_right * class_count_right;
-  //       sum_left += (*class_weights)[j] * class_count_left * class_count_left;
-  //     }
+        sum_right += (*class_weights)[j] * class_count_right * class_count_right;
+        sum_left += (*class_weights)[j] * class_count_left * class_count_left;
+      }
 
-  //     // Decrease of impurity
-  //     decrease = sum_left / (double) n_left + sum_right / (double) n_right;
-  //   }
+      // Decrease of impurity
+      decrease = sum_left / (double) n_left + sum_right / (double) n_right;
+    // }
 
   //   // Regularization
-  //   regularize(decrease, varID);
+    // regularize(decrease, varID);
 
-  //   // If better than before, use this
-  //   if (decrease > best_decrease) {
-  //     best_value = splitID;
-  //     best_varID = varID;
-  //     best_decrease = decrease;
-  //   }
-  }
-
-  best_value = splitID;
-  best_coefficients = splitID;
-  best_groupID = groupID;
-  best_decrease = decrease;
+    // If better than before, use this
+    if (decrease > best_decrease) {
+      best_value = hyperplane.pop_back();
+      best_coefficients = hyperplane;
+      best_groupID = groupID;
+      best_decrease = decrease;
+    }
+  // }
 }
 
 bool TreeClassificationGroup::findBestSplitExtraTrees(size_t nodeID, std::vector<size_t>& possible_split_groupIDs) {

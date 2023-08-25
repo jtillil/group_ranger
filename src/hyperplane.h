@@ -34,7 +34,8 @@
 
 namespace ranger {
 
-std::vector<double> LDA(Eigen::MatrixXf x, Eigen::VectorXf y) {}
+// std::vector<double> 
+bool LDA(Eigen::MatrixXf x, Eigen::VectorXf y) {}
 
 }
 

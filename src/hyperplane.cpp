@@ -29,7 +29,8 @@
 
 namespace ranger {
 
-std::vector<double> LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
+// std::vector<double> 
+bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
 
     // ## Calculate class means
     // mean0 <- colMeans(as.matrix(data_values[response == 0,]))
@@ -56,13 +57,20 @@ std::vector<double> LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
     Eigen::MatrixXf covmat = x1.rows()/(x1.rows()+x2.rows()) * covmat1 + x2.rows()/(x1.rows()+x2.rows()) * covmat2;
 
     // Calculate coefs and val
-    Eigen::MatrixXf hyperplane = covmat.inverse() * (mean1 - mean2);
-    double val = (hyperplane * (0.5*(mean1 + mean2))).sum();
+    Eigen::VectorXf coefs = covmat.inverse() * (mean1 - mean2);
+    double val = (coefs * (0.5*(mean1 + mean2))).sum();
 
+    // Convert Eigen vector to double
+    std::vector<double> hyperplane;
+    hyperplane.reserve(coefs.size());  // Reserve space for efficiency
+    for (int i = 0; i < coefs.size(); ++i) {
+        hyperplane.push_back(static_cast<double>(coefs[i]));  // Convert and add to coefs
+    }
     
-    hyperplane.push_back(val)
+    // Append val
+    hyperplane.push_back(val);
 
-    return hyperplane;
+    return true;
 }
 
 }
