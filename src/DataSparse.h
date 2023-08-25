@@ -75,7 +75,7 @@ public:
   }
   // #nocov end 
 
-private:
+// private:
   Eigen::SparseMatrix<double> x;
   Rcpp::NumericMatrix y;
 };

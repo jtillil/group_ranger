@@ -71,7 +71,34 @@ public:
   double get_y(size_t row, size_t col) const override {
     return y(row, col);
   }
+
+  // WRITTEN FOR GROUP RANGER IMPLEMENTATION
+  Rcpp::NumericMatrix get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+    return x(row, col);
+  }
+
+  Rcpp::NumericMatrix get_y_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+    return y(row, col);
+  }
   
+  // void Data::getAllValues(std::vector<double>& all_values, std::vector<size_t>& sampleIDs, size_t varID, size_t start,
+  //   size_t end) const {
+
+  //   // All values for varID (no duplicates) for given sampleIDs
+  //   if (getUnpermutedVarID(varID) < num_cols_no_snp) {
+      
+  //     all_values.reserve(end - start);
+  //     for (size_t pos = start; pos < end; ++pos) {
+  //       all_values.push_back(get_x(sampleIDs[pos], varID));
+  //     }
+  //     std::sort(all_values.begin(), all_values.end());
+  //     all_values.erase(std::unique(all_values.begin(), all_values.end()), all_values.end());
+  //   } else {
+  //     // If GWA data just use 0, 1, 2
+  //     all_values = std::vector<double>( { 0, 1, 2 });
+  //   }
+  // }
+
   // #nocov start 
   void reserveMemory(size_t y_cols) override {
     // Not needed
@@ -89,10 +116,6 @@ public:
 // private:
   Rcpp::NumericMatrix x;
   Rcpp::NumericMatrix y;
-
-private:
-
-
 };
 
 } // namespace ranger

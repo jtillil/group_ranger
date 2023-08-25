@@ -67,10 +67,6 @@ public:
 // private:
   std::vector<double> x;
   std::vector<double> y;
-
-private:
-
-
 };
 
 } // namespace ranger

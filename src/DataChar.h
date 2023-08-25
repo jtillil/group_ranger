@@ -64,7 +64,7 @@ public:
     y[col * num_rows + row] = value;
   }
 
-private:
+// private:
   std::vector<char> x;
   std::vector<char> y;
 };
