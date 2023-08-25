@@ -59,9 +59,9 @@ bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> h
 
     // Compare to val
     if (hyperplaneval > val) {
-        is_in_right_child = true;
+        bool is_in_right_child = true;
     } else {
-        is_in_right_child = false;
+        bool is_in_right_child = false;
     }
 
     return is_in_right_child;
@@ -108,7 +108,7 @@ bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2, std::vector<double>& hyperplane
     // Append val
     hyperplane.push_back(val);
 
-    hyperplane_success = true;
+    bool hyperplane_success = true;
 
     return hyperplane_success;
 }
