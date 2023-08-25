@@ -443,8 +443,8 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // Extract positions from y
     std::vector<size_t> sampleIDs1;
     std::vector<size_t> sampleIDs2;
-    for (size_t i = 0; i < data.y.size(); ++i) {
-        if (values[i] == targetValue) {
+    for (size_t i = 0; i < data->y.size(); ++i) {
+        if (values[i] == data->get_y(1,1)) {
           sampleIDs1.push_back(i);
         } else {
           sampleIDs2.push_back(i);
@@ -454,8 +454,8 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // Map x to x1 and x2
     Rcpp::NumericMatrix x1;
     Rcpp::NumericMatrix x2;
-    x1 = data.x(sampleIDs1, groups[groupID]);
-    x2 = data.x(sampleIDs2, groups[groupID]);
+    x1 = data->x(sampleIDs1, groups[groupID]);
+    x2 = data->x(sampleIDs2, groups[groupID]);
   }
 
   // Calculate split hyperplane
