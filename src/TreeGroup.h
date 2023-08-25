@@ -237,10 +237,10 @@ protected:
   size_t last_left_nodeID;
 
   // Group specific members
-  bool use_grouped_variables;
-  std::vector<std::vector<uint>> groups;
-  uint num_groups;
-  std::string splitmethod;
+  bool& use_grouped_variables;
+  std::vector<std::vector<uint>>& groups;
+  uint& num_groups;
+  std::string& splitmethod;
 };
 
 } // namespace ranger
