@@ -10,7 +10,6 @@
  #-------------------------------------------------------------------------------*/
 
 #include <Rcpp.h>
-#include <DataRcpp.h>
 #include <unordered_map>
 #include <random>
 #include <algorithm>
@@ -18,6 +17,7 @@
 #include <iterator>
 #include <vector>
 
+#include "DataRcpp.h"
 #include "TreeClassificationGroup.h"
 #include "utility.h" 
 #include "Data.h"
@@ -443,7 +443,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // Extract positions from y
     std::vector<size_t> sampleIDs1;
     std::vector<size_t> sampleIDs2;
-    for (size_t i = 0; i < values.size(); ++i) {
+    for (size_t i = 0; i < data.y.size(); ++i) {
         if (values[i] == targetValue) {
           sampleIDs1.push_back(i);
         } else {
