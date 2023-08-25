@@ -22,7 +22,7 @@
 #include "utility.h"
 #include "ForestGroup.h"
 #include "DataChar.h"
-#include "DataRcpp.h"
+// #include "DataRcpp.h"
 #include "DataDouble.h"
 #include "DataFloat.h"
 
