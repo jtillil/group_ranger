@@ -86,11 +86,11 @@ public:
   }
   // #nocov end 
   
-private:
+// private:
   Rcpp::NumericMatrix x;
   Rcpp::NumericMatrix y;
 
-// private:
+private:
 
 
 };
