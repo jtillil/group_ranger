@@ -29,6 +29,40 @@
 
 namespace ranger {
 
+bool x_is_in_right_child(std::vector<double> x, std::vector<double> coefs, double val) {
+    // Multiply x and coefs
+    double hyperplaneval = 0;
+    for (int i = 0; i < coefs.size(); ++i) {
+        hyperplaneval += x[i]*coefs[i];
+    }
+
+    // Compare to val
+    if (hyperplaneval > val) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> hyperplane) {
+    // Get val
+    double val = hyperplane.back();
+    hyperplane.pop_back();
+
+    // Multiply x and coefs
+    double hyperplaneval = 0;
+    for (int i = 0; i < hyperplane.size(); ++i) {
+        hyperplaneval += x[i]*hyperplane[i];
+    }
+
+    // Compare to val
+    if (hyperplaneval > val) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // std::vector<double> 
 bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
 
