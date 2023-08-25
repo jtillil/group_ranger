@@ -35,17 +35,21 @@
 namespace ranger {
 
 bool x_is_in_right_child(std::vector<double> x, std::vector<double> coefs, double val) {
-    return;
+    return is_in_right_child;
 }
 
 bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> hyperplane) {
-    return;
+    return is_in_right_child;
 }
 
 // std::vector<double> 
 bool LDA(Eigen::MatrixXf x, Eigen::VectorXf y) {
-    return;
+    return hyperplane_success;
 }
+
+// boolean returns
+bool is_in_right_child;
+bool hyperplane_success;
 
 }
 
