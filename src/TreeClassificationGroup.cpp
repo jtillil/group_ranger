@@ -474,6 +474,26 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     return false;
   }
 
+  // Initialize
+  std::vector<size_t> class_counts_right(num_classes);
+  size_t n_right = 0;
+
+  // Compute right class counts
+  for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
+    size_t sampleID = sampleIDs[pos];
+    if (x_is_in_right_child_hyperplane(data->get_x_subset({sample_id}, groups[groupID]), hyperplane)) {
+      uint sample_classID = (*response_classIDs)[sampleID];
+      ++class_counts_right[sample_classID];
+      ++n_right;
+    }
+  }
+  size_t n_left = num_samples_node - n_right;
+
+  // Stop if minimal bucket size reached
+  if (n_left < min_bucket || n_right < min_bucket) {
+    return;
+  }
+
   // Calculate decrease
   double decrease;
   if (splitrule == HELLINGER) {
@@ -488,15 +508,6 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // decrease = sqrt(a1 * a1 + a2 * a2);
     Rcpp::Rcerr << "Error: " << "hellinger splitrule not supported for grouped variables." << " Ranger will EXIT now." << std::endl;
   } else {
-    // Compute right class counts
-    std::vector<size_t> class_counts_right(num_classes);
-    for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
-      size_t sampleID = sampleIDs[pos];
-      if (x_is_in_right_child_hyperplane(data->get_x_subset({sample_id}, groups[groupID]), hyperplane)) {
-        uint sample_classID = (*response_classIDs)[sampleID];
-        ++class_counts_right[sample_classID];
-      }
-    }
     // Sum of squares
     double sum_left = 0;
     double sum_right = 0;
@@ -509,11 +520,6 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
     // Decrease of impurity
     decrease = sum_left / (double) n_left + sum_right / (double) n_right;
-  }
-
-  // Stop if minimal bucket size reached
-  if (n_left < min_bucket || n_right < min_bucket) {
-    continue;
   }
 
   // Regularization
