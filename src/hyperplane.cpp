@@ -64,7 +64,7 @@ bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> h
 }
 
 // std::vector<double> 
-bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
+bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2, std::vector<double>& hyperplane) {
 
     // ## Calculate class means
     // mean0 <- colMeans(as.matrix(data_values[response == 0,]))
@@ -95,8 +95,8 @@ bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2) {
     double val = (coefs * (0.5*(mean1 + mean2))).sum();
 
     // Convert Eigen vector to double
-    std::vector<double> hyperplane;
-    hyperplane.reserve(coefs.size());  // Reserve space for efficiency
+    // std::vector<double> hyperplane;
+    hyperplane.reserve(coefs.size() + 1);  // Reserve space for efficiency
     for (int i = 0; i < coefs.size(); ++i) {
         hyperplane.push_back(static_cast<double>(coefs[i]));  // Convert and add to coefs
     }
