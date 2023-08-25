@@ -37,6 +37,7 @@ bool x_is_in_right_child(std::vector<double> x, std::vector<double> coefs, doubl
     }
 
     // Compare to val
+    bool is_in_right_child;
     if (hyperplaneval > val) {
         is_in_right_child = true;
     } else {
@@ -58,10 +59,11 @@ bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> h
     }
 
     // Compare to val
+    bool is_in_right_child;
     if (hyperplaneval > val) {
-        bool is_in_right_child = true;
+        is_in_right_child = true;
     } else {
-        bool is_in_right_child = false;
+        is_in_right_child = false;
     }
 
     return is_in_right_child;
