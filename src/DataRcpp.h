@@ -87,7 +87,7 @@ public:
 
   std::vector<double> get_y_subset(std::vector<size_t> row) const override {
 
-    std::vector<std::vector<double>> y_out;
+    std::vector<double> y_out;
     for (size_t i = 0; i < num_rows; ++i) {
       y_out.push_back(get_y(i, 1));
     }
