@@ -65,15 +65,10 @@ public:
   }
 
   // WRITTEN FOR GROUP RANGER IMPLEMENTATION
-  double get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
-    return 1;
-  }
+  std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {};
+  std::vector<double> get_y_subset(std::vector<size_t> row) const override {};
 
-  double get_y_subset(std::vector<size_t> row, std::vector<uint> col) const override {
-    return 1;
-  }
-
-// private:
+private:
   std::vector<float> x;
   std::vector<float> y;
 };

@@ -73,31 +73,27 @@ public:
   }
 
   // WRITTEN FOR GROUP RANGER IMPLEMENTATION
-  Rcpp::NumericMatrix get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
-    return x(row, col);
+  std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+
+    std::vector<std::vector<double>> x_out;
+    for (size_t i = 0; i < row.size(); ++i) {
+      for (size_t j = 0; j < col.size(); ++j) {
+        x_out[i].push_back(get_x(i, j));
+      }
+    }
+    return x_out;
+
   }
 
-  Rcpp::NumericMatrix get_y_subset(std::vector<size_t> row, std::vector<uint> col) const override {
-    return y(row, col);
-  }
-  
-  // void Data::getAllValues(std::vector<double>& all_values, std::vector<size_t>& sampleIDs, size_t varID, size_t start,
-  //   size_t end) const {
+  std::vector<double> get_y_subset(std::vector<size_t> row) const override {
 
-  //   // All values for varID (no duplicates) for given sampleIDs
-  //   if (getUnpermutedVarID(varID) < num_cols_no_snp) {
-      
-  //     all_values.reserve(end - start);
-  //     for (size_t pos = start; pos < end; ++pos) {
-  //       all_values.push_back(get_x(sampleIDs[pos], varID));
-  //     }
-  //     std::sort(all_values.begin(), all_values.end());
-  //     all_values.erase(std::unique(all_values.begin(), all_values.end()), all_values.end());
-  //   } else {
-  //     // If GWA data just use 0, 1, 2
-  //     all_values = std::vector<double>( { 0, 1, 2 });
-  //   }
-  // }
+    std::vector<std::vector<double>> y_out;
+    for (size_t i = 0; i < num_rows; ++i) {
+      y_out.push_back(get_y(i, 1));
+    }
+    return y_out;
+
+  }
 
   // #nocov start 
   void reserveMemory(size_t y_cols) override {
@@ -113,7 +109,7 @@ public:
   }
   // #nocov end 
   
-// private:
+private:
   Rcpp::NumericMatrix x;
   Rcpp::NumericMatrix y;
 };

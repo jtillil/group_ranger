@@ -39,7 +39,7 @@ bool x_is_in_right_child(std::vector<double> x, std::vector<double> coefs, doubl
 bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> hyperplane);
 
 // std::vector<double> 
-bool LDA(Eigen::MatrixXf x, Eigen::VectorXf y);
+bool LDA(Eigen::MatrixXd x1, Eigen::MatrixXd x2, std::vector<double>& hyperplane);
 
 // boolean returns
 // bool is_in_right_child;

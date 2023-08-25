@@ -457,7 +457,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     x1 = data->get_x_subset(sampleIDs1, groups[groupID]);
     x2 = data->get_x_subset(sampleIDs2, groups[groupID]);
 
-    // Convert to Eigen::MatrixXf
+    // Convert to Eigen::MatrixXd
     // IF NEEDED
   }
 

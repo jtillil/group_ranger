@@ -70,7 +70,7 @@ bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> h
 }
 
 // std::vector<double> 
-bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2, std::vector<double>& hyperplane) {
+bool LDA(Eigen::MatrixXd x1, Eigen::MatrixXd x2, std::vector<double>& hyperplane) {
 
     // ## Calculate class means
     // mean0 <- colMeans(as.matrix(data_values[response == 0,]))
@@ -84,20 +84,20 @@ bool LDA(Eigen::MatrixXf x1, Eigen::MatrixXf x2, std::vector<double>& hyperplane
     // MatrixXd cov = (centered.adjoint() * centered) / double(mat.rows() - 1);
 
     // Calculate class-specific means and sizes
-    Eigen::VectorXf mean1 = x1.colwise().mean();
-    Eigen::VectorXf mean2 = x2.colwise().mean();
+    Eigen::VectorXd mean1 = x1.colwise().mean();
+    Eigen::VectorXd mean2 = x2.colwise().mean();
 
     // Calculate class-specific covariance matrices
-    Eigen::MatrixXf centered1 = x1.rowwise() - mean1;
-    Eigen::MatrixXf covmat1 = (centered1.adjoint() * centered1) / double(x1.rows() - 1);
-    Eigen::MatrixXf centered2 = x2.rowwise() - mean2;
-    Eigen::MatrixXf covmat2 = (centered2.adjoint() * centered2) / double(x2.rows() - 1);
+    Eigen::MatrixXd centered1 = x1.rowwise() - mean1;
+    Eigen::MatrixXd covmat1 = (centered1.adjoint() * centered1) / double(x1.rows() - 1);
+    Eigen::MatrixXd centered2 = x2.rowwise() - mean2;
+    Eigen::MatrixXd covmat2 = (centered2.adjoint() * centered2) / double(x2.rows() - 1);
 
     // Weighted mean covariance matrix
-    Eigen::MatrixXf covmat = x1.rows()/(x1.rows()+x2.rows()) * covmat1 + x2.rows()/(x1.rows()+x2.rows()) * covmat2;
+    Eigen::MatrixXd covmat = x1.rows()/(x1.rows()+x2.rows()) * covmat1 + x2.rows()/(x1.rows()+x2.rows()) * covmat2;
 
     // Calculate coefs and val
-    Eigen::VectorXf coefs = covmat.inverse() * (mean1 - mean2);
+    Eigen::VectorXd coefs = covmat.inverse() * (mean1 - mean2);
     double val = (coefs * (0.5*(mean1 + mean2))).sum();
 
     // Convert Eigen vector to double
