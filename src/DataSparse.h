@@ -75,6 +75,15 @@ public:
   }
   // #nocov end 
 
+  // WRITTEN FOR GROUP RANGER IMPLEMENTATION
+  double get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+    return 1;
+  }
+
+  double get_y_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+    return 1;
+  }
+
 // private:
   Eigen::SparseMatrix<double> x;
   Rcpp::NumericMatrix y;

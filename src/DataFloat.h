@@ -64,6 +64,15 @@ public:
     y[col * num_rows + row] = value;
   }
 
+  // WRITTEN FOR GROUP RANGER IMPLEMENTATION
+  double get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+    return 1;
+  }
+
+  double get_y_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+    return 1;
+  }
+
 // private:
   std::vector<float> x;
   std::vector<float> y;
