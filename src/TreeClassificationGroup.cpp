@@ -441,10 +441,11 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   // Get group-specific x and node-specific y values
   if (splitmethod == "LDA") {
     // Extract positions from y
+    std::vector<double> y_vals = data->get_y_subset(sampleIDs[nodeID]);
     std::vector<size_t> sampleIDs1;
     std::vector<size_t> sampleIDs2;
     for (size_t i = 0; i < num_samples_node; ++i) {
-      if (values[i] == data->get_y(1,1)) {
+      if (y_vals[i] == data->get_y(0,0)) {
         sampleIDs1.push_back(i);
       } else {
         sampleIDs2.push_back(i);

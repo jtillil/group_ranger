@@ -89,7 +89,7 @@ public:
 
     std::vector<double> y_out;
     for (size_t i = 0; i < num_rows; ++i) {
-      y_out.push_back(get_y(i, 1));
+      y_out.push_back(get_y(i, 0));
     }
     return y_out;
 
