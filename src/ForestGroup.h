@@ -26,6 +26,7 @@
 #include "globals.h"
 #include "TreeGroup.h"
 #include "Data.h"
+#include "DataRcpp.h"
 
 namespace ranger {
 
