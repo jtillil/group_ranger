@@ -196,7 +196,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> p
       //   }
       // } else {
         findBestSplitValueUnordered(nodeID, groupID, num_classes, class_counts, num_samples_node, best_value, best_coefficients, best_groupID,
-            best_decrease, splitmethod);
+            best_decrease, groups[groupID], splitmethod);
       // }
     }
   }
@@ -436,7 +436,7 @@ void TreeClassificationGroup::findBestSplitValueLargeQ(size_t nodeID, size_t var
 
 void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t groupID, size_t num_classes,
     const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, size_t& best_groupID,
-    double& best_decrease, std::string splitmethod) {
+    double& best_decrease, std::vector<uint> group, std::string splitmethod) {
 
   // Setup variables
   bool success;
@@ -461,13 +461,13 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
     
     // Map x to x1 and x2
-    std::vector<uint> local_group = {groups[groupID][1]};
-    // for (uint varID : groups[groupID]) {
-    for (uint i = 1; i < groups[groupID].size(); ++i) {
-      local_group.push_back(groups[groupID][i]);
-    }
-    x1 = data->get_x_subset(sampleIDs1, local_group);
-    x2 = data->get_x_subset(sampleIDs2, local_group);
+    // std::vector<uint> local_group = {groups[groupID][1]};
+    // // for (uint varID : groups[groupID]) {
+    // for (uint i = 1; i < groups[groupID].size(); ++i) {
+    //   local_group.push_back(groups[groupID][i]);
+    // }
+    x1 = data->get_x_subset(sampleIDs1, group);
+    x2 = data->get_x_subset(sampleIDs2, group);
 
     // Convert to Eigen::MatrixXd
     for (int j = 0; j < std::max(x1[0].size(), x2[0].size()); ++j) {
