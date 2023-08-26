@@ -332,7 +332,9 @@ bool TreeGroup::splitNode(size_t nodeID) {
   std::vector<double> split_coefficients = split_coefficients[nodeID];
 
   // Save non-permuted variable for prediction
-  split_groupIDs[nodeID] = data->getUnpermutedVarID(split_groupID);
+  // TODO
+  // split_groupIDs[nodeID] = data->getUnpermutedVarID(split_groupID);
+  split_groupIDs[nodeID] = split_groupID;
 
   // Create child nodes
   size_t left_child_nodeID = split_groupIDs.size();
