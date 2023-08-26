@@ -165,7 +165,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     printf("You got until rewriting groups\n");
 
     std::vector<std::vector<uint>> groups_internal;
-    for (int i = 0; i < num_groups; i++) {
+    for (size_t i = 0; i < num_groups; i++) {
       groups_internal.push_back(groups[i]);
     }
 
