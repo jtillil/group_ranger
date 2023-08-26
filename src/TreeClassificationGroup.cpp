@@ -441,7 +441,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   // Get group-specific x and node-specific y values
   if (splitmethod == "LDA") {
     // Extract positions from y
-    std::vector<double> y_vals = data->get_y_subset(sampleIDs[nodeID]);
+    std::vector<double> y_vals = data->get_y_subset(sampleIDs);
     std::vector<size_t> sampleIDs1;
     std::vector<size_t> sampleIDs2;
     for (size_t i = 0; i < num_samples_node; ++i) {
@@ -455,8 +455,8 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // Map x to x1 and x2
     Rcpp::NumericMatrix x1;
     Rcpp::NumericMatrix x2;
-    x1 = data->get_x_subset(sampleIDs1, groups[groupID]);
-    x2 = data->get_x_subset(sampleIDs2, groups[groupID]);
+    x1 = (data->get_x_subset(sampleIDs1, groups[groupID]));
+    x2 = (data->get_x_subset(sampleIDs2, groups[groupID]));
 
     // Convert to Eigen::MatrixXd
     // IF NEEDED
@@ -465,14 +465,14 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   // Calculate split hyperplane
   std::vector<double> hyperplane;
   if (splitmethod == "LDA") {
-    success = LDA(x1, x2, hyperplane);
+    bool success = LDA(x1, x2, hyperplane);
   } else {
     Rcpp::Rcerr << "Error: " << "unknown splitmethod for grouped variables." << " Ranger will EXIT now." << std::endl;
   }
 
   // Check if success
   if (!success) {
-    return false;
+    return;
   }
 
   // Initialize

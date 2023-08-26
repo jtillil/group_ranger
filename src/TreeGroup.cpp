@@ -23,7 +23,8 @@ TreeGroup::TreeGroup() :
         false), split_groupIDs_used(0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(
         true), sample_fraction(0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0) {
+        0), use_grouped_variables(use_grouped_variables), groups(groups), num_groups(0), splitmethod(
+        DEFAULT_SPLITMETHOD) {
 }
 
 TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_groupIDs,
@@ -34,7 +35,8 @@ TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vecto
         0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(true), sample_fraction(
         0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0) {
+        0), use_grouped_variables(use_grouped_variables), groups(groups), num_groups(0), splitmethod(
+        DEFAULT_SPLITMETHOD) {
 }
 
 void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed, std::vector<size_t>* deterministic_varIDs,
@@ -42,8 +44,8 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
     bool sample_with_replacement, bool memory_saving_splitting, SplitRule splitrule, std::vector<double>* case_weights,
     std::vector<size_t>* manual_inbag, bool keep_inbag, std::vector<double>* sample_fraction, double alpha,
     double minprop, bool holdout, uint num_random_splits, uint max_depth, std::vector<double>* regularization_factor,
-    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool use_grouped_variables,
-    std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod) {
+    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool& use_grouped_variables,
+    std::vector<std::vector<uint>>& groups, uint& num_groups, std::string& splitmethod) {
 
   this->data = data;
   this->mtry = mtry;
@@ -318,7 +320,7 @@ bool TreeGroup::splitNode(size_t nodeID) {
   createPossibleSplitGroupSubset(possible_split_groupIDs);
 
   // Call subclass method, sets split_groupIDs and calculates hyperplane
-  bool stop = splitNodeInternal(nodeID, possible_split_groupIDs);
+  bool stop = splitNodeInternal(nodeID, possible_split_groupIDs, splitmethod);
   if (stop) {
     // Terminal node
     return true;

@@ -101,7 +101,7 @@ const double STATUS_INTERVAL = 30.0;
 const double Q_THRESHOLD = 0.02;
 
 // Group specific globals
-const std::string DEFAULT_SPLITMETHOD = "LDA";
+std::string DEFAULT_SPLITMETHOD = "LDA";
 
 } // namespace ranger
 
