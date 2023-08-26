@@ -85,7 +85,7 @@ void TreeClassificationGroup::appendToFileInternal(std::ofstream& file) { // #no
   // Empty on purpose
 } // #nocov end
 
-bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t>& possible_split_groupIDs, std::string& splitmethod) {
+bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t> possible_split_groupIDs, std::string& splitmethod) {
 
   // Stop if maximum node size or depth reached
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
@@ -154,7 +154,7 @@ double TreeClassificationGroup::computePredictionAccuracyInternal(std::vector<do
   return (1.0 - (double) num_missclassifications / (double) num_predictions);
 }
 
-bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& possible_split_groupIDs, std::string& splitmethod) {
+bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> possible_split_groupIDs, std::string& splitmethod) {
 
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
   size_t num_classes = class_values->size();
@@ -175,7 +175,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t>& 
   if (num_samples_node >= 2 * min_bucket) {
 
     // For all possible split groups
-    for (auto& groupID : possible_split_groupIDs) {
+    for (size_t groupID : possible_split_groupIDs) {
       // Find best split value, if ordered consider all values as split values, else all 2-partitions
       // if (data->isOrderedVariable(varID)) {
 
@@ -459,7 +459,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
     
     // Map x to x1 and x2
-    const std::vector<uint>& local_group = groups;
+    const std::vector<uint>& local_group = groups[groupID];
     x1 = data->get_x_subset(sampleIDs1, local_group);
     x2 = data->get_x_subset(sampleIDs2, local_group);
 
