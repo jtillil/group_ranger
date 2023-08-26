@@ -440,8 +440,8 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
 
   // Setup variables
   bool success;
-  Rcpp::NumericMatrix x1;
-  Rcpp::NumericMatrix x2;
+  std::vector<std::vector<double>> x1;
+  std::vector<std::vector<double>> x2;
 
   // Get group-specific x and node-specific y values
   if (splitmethod == "LDA") {
@@ -459,8 +459,9 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
 
     // Map x to x1 and x2
-    x1 = (data->get_x_subset(sampleIDs1, groups[groupID]));
-    x2 = (data->get_x_subset(sampleIDs2, groups[groupID]));
+    std::vector<uint>& local_group = groups[groupID];
+    x1 = data->get_x_subset(sampleIDs1, local_group);
+    x2 = data->get_x_subset(sampleIDs2, local_group);
 
     // Convert to Eigen::MatrixXd
     // IF NEEDED
