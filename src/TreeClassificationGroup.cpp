@@ -460,8 +460,9 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     
     // Map x to x1 and x2
     std::vector<uint> local_group;
-    for (uint varID : groups[groupID]) {
-      local_group.push_back(varID);
+    // for (uint varID : groups[groupID]) {
+    for (size_t i = 0, i < groups[groupID].length(), ++i) {
+      local_group.push_back(groups[groupID][i]);
     }
     x1 = data->get_x_subset(sampleIDs1, local_group);
     x2 = data->get_x_subset(sampleIDs2, local_group);
