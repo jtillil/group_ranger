@@ -438,10 +438,16 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, size_t& best_groupID,
     double& best_decrease, std::string splitmethod) {
 
+  // Setup variables
+  bool success;
+  Rcpp::NumericMatrix x1;
+  Rcpp::NumericMatrix x2;
+
   // Get group-specific x and node-specific y values
   if (splitmethod == "LDA") {
     // Extract positions from y
-    std::vector<double> y_vals = data->get_y_subset(sampleIDs(start_pos[nodeID], end_pos[nodeID] - 1));
+    std::vector<double> current_sampleIDs(sampleIDs.begin() + start_pos[nodeID], sampleIDs.begin() + end_pos[nodeID] - 1);
+    std::vector<double> y_vals = data->get_y_subset(current_sampleIDs);
     std::vector<size_t> sampleIDs1;
     std::vector<size_t> sampleIDs2;
     for (size_t i = 0; i < num_samples_node; ++i) {
@@ -453,8 +459,6 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
 
     // Map x to x1 and x2
-    Rcpp::NumericMatrix x1;
-    Rcpp::NumericMatrix x2;
     x1 = (data->get_x_subset(sampleIDs1, groups[groupID]));
     x2 = (data->get_x_subset(sampleIDs2, groups[groupID]));
 
