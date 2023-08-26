@@ -463,7 +463,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // Map x to x1 and x2
     std::vector<uint> local_group = {};
     // for (uint varID : groups[groupID]) {
-    for (size_t i = 0; i < groups[groupID].size(); ++i) {
+    for (uint i = 0; i < groups[groupID].size(); ++i) {
       local_group.push_back(groups[groupID][i]);
     }
     x1 = data->get_x_subset(sampleIDs1, local_group);
@@ -500,7 +500,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   // Compute right class counts
   for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
     size_t sampleID = sampleIDs[pos];
-    if (x_is_in_right_child_hyperplane(data->get_x_subset({sample_id}, groups[groupID]), hyperplane)) {
+    if (x_is_in_right_child_hyperplane(data->get_x_subset(sampleID, groups[groupID]), hyperplane)) {
       uint sample_classID = (*response_classIDs)[sampleID];
       ++class_counts_right[sample_classID];
       ++n_right;
