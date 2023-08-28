@@ -196,7 +196,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> p
       //   }
       // } else {
         findBestSplitValueUnordered(nodeID, groupID, num_classes, class_counts, num_samples_node, best_value, best_coefficients, best_groupID,
-            best_decrease, groups, splitmethod);
+            best_decrease, splitmethod);
             //(&groups)[groupID], splitmethod);
       // }
     }
@@ -437,7 +437,7 @@ void TreeClassificationGroup::findBestSplitValueLargeQ(size_t nodeID, size_t var
 
 void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t groupID, size_t num_classes,
     const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, size_t& best_groupID,
-    double& best_decrease, std::vector<uint> group, std::string splitmethod) {
+    double& best_decrease, std::string splitmethod) {
 
   // Setup variables
   bool success;
@@ -445,6 +445,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   std::vector<std::vector<double>> x2;
   Eigen::MatrixXd x1Eigen;
   Eigen::MatrixXd x2Eigen;
+  const std::vector<uint>& group = (*groups)[groupID];
 
   // Get group-specific x and node-specific y values
   if (splitmethod == "LDA") {
