@@ -101,6 +101,8 @@ const double STATUS_INTERVAL = 30.0;
 const double Q_THRESHOLD = 0.02;
 
 // Group specific globals
+bool DEFAULT_USE_GROUPED_VARIABLES = true;
+std::vector<std::vector<uint>> DEFAULT_GROUPS = {{}};
 std::string DEFAULT_SPLITMETHOD = "LDA";
 uint DEFAULT_NUM_GROUPS = 0;
 
