@@ -73,7 +73,7 @@ private:
       double& best_decrease);
   void findBestSplitValueUnordered(size_t nodeID, size_t groupID, size_t num_classes,
       const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, 
-      size_t& best_groupID, double& best_decrease, std::vector<uint>& group, std::string splitmethod);
+      size_t& best_groupID, double& best_decrease, std::vector<uint> group, std::string splitmethod);
 
   bool findBestSplitExtraTrees(size_t nodeID, std::vector<size_t>& possible_split_groupIDs);
   void findBestSplitValueExtraTrees(size_t nodeID, size_t varID, size_t num_classes,
