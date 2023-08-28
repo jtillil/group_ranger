@@ -9,6 +9,7 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
+#include <Rcpp.h>
 #include <unordered_map>
 #include <algorithm>
 #include <iterator>
