@@ -12,7 +12,7 @@
 #ifndef TREEGROUP_H_
 #define TREEGROUP_H_
 
-#include <Rcpp.h>
+// #include <Rcpp.h>
 #include <vector>
 #include <random>
 #include <iostream>
@@ -142,7 +142,7 @@ protected:
   void saveSplitGroupID(size_t groupID) {
     if (regularization) {
       if (importance_mode == IMP_GINI_CORRECTED) {
-        Rcpp::Rcerr << "Error: " << "saveSplitGroupID not implemented for IMP_GINI_CORRECTED." << std::endl;
+        // Rcpp::Rcerr << "Error: " << "saveSplitGroupID not implemented for IMP_GINI_CORRECTED." << std::endl;
         (*split_groupIDs_used)[data->getUnpermutedVarID(groupID)] = true;
       } else {
         (*split_groupIDs_used)[groupID] = true;
