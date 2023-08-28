@@ -13,6 +13,7 @@
 #define FORESTCLASSIFICATIONGROUP_H_
 
 #include <iostream>
+#include <Rcpp.h>
 #include <map>
 #include <utility>
 #include <vector>

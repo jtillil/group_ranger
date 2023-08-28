@@ -12,6 +12,7 @@
 #ifndef TREEGROUP_H_
 #define TREEGROUP_H_
 
+#include <Rcpp.h>
 #include <vector>
 #include <random>
 #include <iostream>
