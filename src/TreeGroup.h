@@ -138,12 +138,13 @@ protected:
       }
     }
 
-  void saveSplitGroupID(size_t varID) {
+  void saveSplitGroupID(size_t groupID) {
     if (regularization) {
       if (importance_mode == IMP_GINI_CORRECTED) {
-        (*split_groupIDs_used)[data->getUnpermutedVarID(varID)] = true;
+        Rcpp::Rcerr << "Error: " << "saveSplitGroupID not implemented for IMP_GINI_CORRECTED." << std::endl;
+        (*split_groupIDs_used)[data->getUnpermutedVarID(groupID)] = true;
       } else {
-        (*split_groupIDs_used)[varID] = true;
+        (*split_groupIDs_used)[groupID] = true;
       }
     }
   }
