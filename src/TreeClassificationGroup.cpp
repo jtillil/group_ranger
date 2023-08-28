@@ -440,7 +440,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     double& best_decrease, std::string splitmethod) {
 
   // Setup variables
-  bool success;
+  bool success = false;
   std::vector<std::vector<double>> x1;
   std::vector<std::vector<double>> x2;
   Eigen::MatrixXd x1Eigen;
@@ -529,6 +529,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // double a2 = sqrt(1 - tpr) - sqrt(1 - fpr);
     // decrease = sqrt(a1 * a1 + a2 * a2);
     Rcpp::Rcerr << "Error: " << "hellinger splitrule not supported for grouped variables." << " Ranger will EXIT now." << std::endl;
+    return;
   } else {
     // Sum of squares
     double sum_left = 0;

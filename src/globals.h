@@ -102,6 +102,7 @@ const double Q_THRESHOLD = 0.02;
 
 // Group specific globals
 std::string DEFAULT_SPLITMETHOD = "LDA";
+uint DEFAULT_NUM_GROUPS = 0;
 
 } // namespace ranger
 
