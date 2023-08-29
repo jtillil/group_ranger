@@ -260,11 +260,11 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     x2 = data->get_x_subset(sampleIDs2, group);
 
     // Convert to Eigen::MatrixXd
-    for (int j = 0; j < std::max(x1[0].size(), x2[0].size()); ++j) {
-        for (int i = 0; i < x1.size(); ++i) {
+    for (uint j = 0; j < std::max(x1[0].size(), x2[0].size()); ++j) {
+        for (uint i = 0; i < x1.size(); ++i) {
             x1Eigen(i, j) = x1[i][j];
         }
-        for (int i = 0; i < x2.size(); ++i) {
+        for (uint i = 0; i < x2.size(); ++i) {
             x2Eigen(i, j) = x2[i][j];
         }
     }
