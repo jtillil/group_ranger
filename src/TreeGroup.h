@@ -82,7 +82,7 @@ protected:
   void createPossibleSplitGroupSubset(std::vector<size_t>& result);
 
   bool splitNode(size_t nodeID);
-  virtual bool splitNodeInternal(size_t nodeID, std::vector<size_t> possible_split_groupIDs, std::string& splitmethod) = 0;
+  virtual bool splitNodeInternal(size_t nodeID, std::vector<size_t> possible_split_groupIDs) = 0;
 
   void createEmptyNode();
   virtual void createEmptyNodeInternal() = 0;
