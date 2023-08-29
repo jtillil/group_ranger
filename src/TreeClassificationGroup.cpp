@@ -196,7 +196,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> p
       //   }
       // } else {
         findBestSplitValueUnordered(nodeID, groupID, num_classes, class_counts, num_samples_node, best_value, best_coefficients, best_groupID,
-            best_decrease, splitmethod);
+            best_decrease);
             //(&groups)[groupID], splitmethod);
       // }
     }
