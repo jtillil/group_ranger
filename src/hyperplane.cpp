@@ -85,13 +85,13 @@ bool LDA(Eigen::MatrixXd x1, Eigen::MatrixXd x2, std::vector<double>& hyperplane
     // MatrixXd cov = (centered.adjoint() * centered) / double(mat.rows() - 1);
 
     // Calculate class-specific means and sizes
-    Eigen::VectorXd mean1 = x1.colwise().mean().transpose();
-    Eigen::VectorXd mean2 = x2.colwise().mean().transpose();
+    Eigen::VectorXd mean1 = x1.colwise().mean();
+    Eigen::VectorXd mean2 = x2.colwise().mean();
 
     // Calculate class-specific covariance matrices
-    Eigen::MatrixXd centered1 = x1.rowwise() - mean1;
+    Eigen::MatrixXd centered1 = x1.rowwise() - mean1.transpose();
     Eigen::MatrixXd covmat1 = (centered1.adjoint() * centered1) / double(x1.rows() - 1);
-    Eigen::MatrixXd centered2 = x2.rowwise() - mean2;
+    Eigen::MatrixXd centered2 = x2.rowwise() - mean2.transpose();
     Eigen::MatrixXd covmat2 = (centered2.adjoint() * centered2) / double(x2.rows() - 1);
 
     // Weighted mean covariance matrix
