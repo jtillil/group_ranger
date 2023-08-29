@@ -296,7 +296,8 @@ void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
   // For corrected Gini importance add dummy variables
   if (importance_mode == IMP_GINI_CORRECTED) {
     // num_groups += data->getNumCols();
-    num_groups += num_groups;
+    // num_groups += num_groups;
+    // TODO IMP_GINI_CORRECTED
   }
 
   // Randomly add non-deterministic variables (according to weights if needed)
