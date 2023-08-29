@@ -111,7 +111,7 @@ private:
   const bool* use_grouped_variables;
   const std::vector<std::vector<uint>>* groups;
   const uint* num_groups;
-  const std::string splitmethod;
+  const std::string* splitmethod;
 
   std::vector<size_t> counter;
   std::vector<size_t> counter_per_class;
