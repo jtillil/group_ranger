@@ -22,7 +22,9 @@
 #include <cstddef> 
 #include <memory> 
 #include <type_traits> 
-#include <utility> 
+#include <utility>
+
+#include "Eigen/Dense"
 
 #ifdef R_BUILD
 #include <Rinternals.h>
@@ -30,7 +32,6 @@
 
 #include "globals.h"
 #include "Data.h"
-#include "Eigen/Dense"
 
 namespace ranger {
 

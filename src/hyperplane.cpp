@@ -47,6 +47,7 @@ bool x_is_in_right_child(std::vector<double> x, std::vector<double> coefs, doubl
     return is_in_right_child;
 }
 
+// TODO is right assignment correct?
 bool x_is_in_right_child_hyperplane(std::vector<double> x, std::vector<double> hyperplane) {
     // Get val
     double val = hyperplane.back();
