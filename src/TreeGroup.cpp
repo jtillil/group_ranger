@@ -322,7 +322,7 @@ bool TreeGroup::splitNode(size_t nodeID) {
   createPossibleSplitGroupSubset(possible_split_groupIDs);
 
   // Call subclass method, sets split_groupIDs and calculates hyperplane
-  bool stop = splitNodeInternal(nodeID, possible_split_groupIDs, splitmethod);
+  bool stop = splitNodeInternal(nodeID, possible_split_groupIDs);
   if (stop) {
     // Terminal node
     return true;

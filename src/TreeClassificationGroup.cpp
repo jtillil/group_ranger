@@ -85,7 +85,7 @@ void TreeClassificationGroup::appendToFileInternal(std::ofstream& file) { // #no
   // Empty on purpose
 } // #nocov end
 
-bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t> possible_split_groupIDs, std::string& splitmethod) {
+bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_t> possible_split_groupIDs) {
 
   // Stop if maximum node size or depth reached
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
@@ -117,7 +117,7 @@ bool TreeClassificationGroup::splitNodeInternal(size_t nodeID, std::vector<size_
   if (splitrule == EXTRATREES) {
     stop = findBestSplitExtraTrees(nodeID, possible_split_groupIDs);
   } else {
-    stop = findBestSplit(nodeID, possible_split_groupIDs, splitmethod);
+    stop = findBestSplit(nodeID, possible_split_groupIDs);
   }
 
   if (stop) {
@@ -154,7 +154,7 @@ double TreeClassificationGroup::computePredictionAccuracyInternal(std::vector<do
   return (1.0 - (double) num_missclassifications / (double) num_predictions);
 }
 
-bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> possible_split_groupIDs, std::string& splitmethod) {
+bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> possible_split_groupIDs) {
 
   size_t num_samples_node = end_pos[nodeID] - start_pos[nodeID];
   size_t num_classes = class_values->size();
@@ -225,7 +225,7 @@ bool TreeClassificationGroup::findBestSplit(size_t nodeID, std::vector<size_t> p
 
 void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t groupID, size_t num_classes,
     const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, size_t& best_groupID,
-    double& best_decrease, std::string splitmethod) {
+    double& best_decrease) {
 
   // Setup variables
   bool success = false;
