@@ -80,10 +80,10 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
   this->regularization_factor = regularization_factor;
   this->regularization_usedepth = regularization_usedepth;
   this->split_groupIDs_used = split_groupIDs_used;
-  this->use_grouped_variables = use_grouped_variables;
-  this->groups = groups;
-  this->num_groups = num_groups;
-  this->splitmethod = splitmethod;
+  // this->use_grouped_variables = use_grouped_variables;
+  // this->groups = groups;
+  // this->num_groups = num_groups;
+  // this->splitmethod = splitmethod;
 
   // Regularization
   if (regularization_factor->size() > 0) {

@@ -34,8 +34,8 @@ TreeClassificationGroup::TreeClassificationGroup(std::vector<double>* class_valu
     bool* use_grouped_variables, std::vector<std::vector<uint>>* groups,
     uint* num_groups, std::string* splitmethod) :
     class_values(class_values), response_classIDs(response_classIDs), sampleIDs_per_class(sampleIDs_per_class), class_weights(
-        class_weights), use_grouped_variables(use_grouped_variables), groups(groups), num_groups(0), splitmethod(
-        DEFAULT_SPLITMETHOD), counter(0), counter_per_class(0) {
+        class_weights), use_grouped_variables(use_grouped_variables), groups(groups), num_groups(num_groups), splitmethod(
+        splitmethod), counter(0), counter_per_class(0) {
 }
 
 TreeClassificationGroup::TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs,
