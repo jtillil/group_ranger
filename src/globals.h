@@ -13,6 +13,7 @@ R package "ranger" under GPL3 license.
 #define GLOBALS_H_
 
 #include <string>
+#include <vector>
 
 namespace ranger {
 
