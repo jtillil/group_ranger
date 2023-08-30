@@ -190,26 +190,26 @@ void drawWithoutReplacementSimple(std::vector<size_t>& result, std::mt19937_64& 
 void drawWithoutReplacementSimple(std::vector<size_t>& result, std::mt19937_64& random_number_generator, size_t max,
     const std::vector<size_t>& skip, size_t num_samples);
 
-/**
- * Fisher Yates algorithm for sampling without replacement.
- * @param result Vector to add results to. Will not be cleaned before filling.
- * @param random_number_generator Random number generator
- * @param max Length of range. Interval to draw from: 0..max-1
- * @param num_samples Number of samples to draw
- */
-void drawWithoutReplacementFisherYates(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
-    size_t max, size_t num_samples);
+// /**
+//  * Fisher Yates algorithm for sampling without replacement.
+//  * @param result Vector to add results to. Will not be cleaned before filling.
+//  * @param random_number_generator Random number generator
+//  * @param max Length of range. Interval to draw from: 0..max-1
+//  * @param num_samples Number of samples to draw
+//  */
+// void drawWithoutReplacementFisherYates(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
+//     size_t max, size_t num_samples);
 
-/**
- * Fisher Yates algorithm for sampling without replacement (skip values).
- * @param result Vector to add results to. Will not be cleaned before filling.
- * @param random_number_generator Random number generator
- * @param max Length of range. Interval to draw from: 0..max-1
- * @param skip Values to skip
- * @param num_samples Number of samples to draw
- */
-void drawWithoutReplacementFisherYates(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
-    size_t max, const std::vector<size_t>& skip, size_t num_samples);
+// /**
+//  * Fisher Yates algorithm for sampling without replacement (skip values).
+//  * @param result Vector to add results to. Will not be cleaned before filling.
+//  * @param random_number_generator Random number generator
+//  * @param max Length of range. Interval to draw from: 0..max-1
+//  * @param skip Values to skip
+//  * @param num_samples Number of samples to draw
+//  */
+// void drawWithoutReplacementFisherYates(std::vector<size_t>& result, std::mt19937_64& random_number_generator,
+//     size_t max, const std::vector<size_t>& skip, size_t num_samples);
 
 /**
  * Draw random numers without replacement and with weighted probabilites from 0..n-1.

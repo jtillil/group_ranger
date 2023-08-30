@@ -93,10 +93,10 @@ protected:
   virtual double computePredictionAccuracyInternal(std::vector<double>* prediction_error_casewise) = 0;
   
   void bootstrap();
-  void bootstrapWithoutReplacement();
+  // void bootstrapWithoutReplacement();
 
-  void bootstrapWeighted();
-  void bootstrapWithoutReplacementWeighted();
+  // void bootstrapWeighted();
+  // void bootstrapWithoutReplacementWeighted();
 
   virtual void bootstrapClassWise();
   virtual void bootstrapWithoutReplacementClassWise();
