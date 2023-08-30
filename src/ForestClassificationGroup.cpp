@@ -10,6 +10,7 @@
  #-------------------------------------------------------------------------------*/
 
 #include <Rcpp.h>
+#include <RcppEigen.h>
 #include <unordered_map>
 #include <algorithm>
 #include <iterator>

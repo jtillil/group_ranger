@@ -9,6 +9,8 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
+#include <Rcpp.h>
+#include <RcppEigen.h>
 #include <math.h>
 #include <algorithm>
 #include <stdexcept>
@@ -37,7 +39,7 @@ ForestGroup::ForestGroup() :
         DEFAULT_MAXDEPTH), alpha(DEFAULT_ALPHA), minprop(DEFAULT_MINPROP), num_threads(DEFAULT_NUM_THREADS), data { }, overall_prediction_error(
         NAN), importance_mode(DEFAULT_IMPORTANCE_MODE), regularization_usedepth(false), progress(0), use_grouped_variables(
         true), groups({{0}}), num_groups(0), splitmethod("LDA") {
-    printf("This is make_unique<ForestGroup>.\n");
+    Rprintf("This is make_unique<ForestGroup>.\n");
 }
 
 // #nocov start
