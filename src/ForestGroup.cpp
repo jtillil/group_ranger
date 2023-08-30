@@ -37,7 +37,7 @@ ForestGroup::ForestGroup() :
         DEFAULT_MAXDEPTH), alpha(DEFAULT_ALPHA), minprop(DEFAULT_MINPROP), num_threads(DEFAULT_NUM_THREADS), data { }, overall_prediction_error(
         NAN), importance_mode(DEFAULT_IMPORTANCE_MODE), regularization_usedepth(false), progress(0), use_grouped_variables(
         true), groups({{0}}), num_groups(0), splitmethod("LDA") {
-    printf("This is make_unique<ForestGroup>."\n)
+    printf("This is make_unique<ForestGroup>.\n");
 }
 
 // #nocov start
@@ -155,7 +155,7 @@ void ForestGroup::initR(std::unique_ptr<Data> input_data, uint mtry, uint num_tr
   this->verbose_out = verbose_out;
 
   if (debug) {
-    Rprintf("Start forest init.");
+    printf("Start forest init.");
   }
 
   // Call other init function
@@ -259,7 +259,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
   }
 
   if (debug) {
-    Rprintf("Start internal forest init.");
+    printf("Start internal forest init.");
   }
 
   initInternal();
