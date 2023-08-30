@@ -239,9 +239,9 @@ protected:
   size_t last_left_nodeID;
 
   // Group specific members
-  bool use_grouped_variables;
+  bool* use_grouped_variables;
   const std::vector<std::vector<uint>>* groups;
-  uint num_groups;
+  uint* num_groups;
   const std::string* splitmethod;
 };
 
