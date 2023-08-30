@@ -228,7 +228,7 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
                    dependent.variable.name = NULL, status.variable.name = NULL, 
                    classification = NULL, x = NULL, y = NULL,
                    #### group specific arguments
-                   use_grouped_variables = FALSE, groups = NULL, splitmethod = "LDA", debug = false, ...) {
+                   use_grouped_variables = FALSE, groups = NULL, splitmethod = "LDA", debug = FALSE, ...) {
   
   ## Handle ... arguments
   if (length(list(...)) > 0) {
