@@ -312,7 +312,7 @@ void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
   // }
 
   // Always use deterministic variables
-  std::copy(deterministic_varIDs->begin(), deterministic_varIDs->end(), std::inserter(result, result.end()));
+  // std::copy(deterministic_varIDs->begin(), deterministic_varIDs->end(), std::inserter(result, result.end()));
 }
 
 bool TreeGroup::splitNode(size_t nodeID) {
@@ -493,98 +493,98 @@ void TreeGroup::bootstrap() {
   }
 }
 
-void TreeGroup::bootstrapWeighted() {
+// void TreeGroup::bootstrapWeighted() {
 
-  // Use fraction (default 63.21%) of the samples
-  size_t num_samples_inbag = (size_t) num_samples * (*sample_fraction)[0];
+//   // Use fraction (default 63.21%) of the samples
+//   size_t num_samples_inbag = (size_t) num_samples * (*sample_fraction)[0];
 
-  // Reserve space, reserve a little more to be save)
-  sampleIDs.reserve(num_samples_inbag);
-  oob_sampleIDs.reserve(num_samples * (exp(-(*sample_fraction)[0]) + 0.1));
+//   // Reserve space, reserve a little more to be save)
+//   sampleIDs.reserve(num_samples_inbag);
+//   oob_sampleIDs.reserve(num_samples * (exp(-(*sample_fraction)[0]) + 0.1));
 
-  std::discrete_distribution<> weighted_dist(case_weights->begin(), case_weights->end());
+//   std::discrete_distribution<> weighted_dist(case_weights->begin(), case_weights->end());
 
-  // Start with all samples OOB
-  inbag_counts.resize(num_samples, 0);
+//   // Start with all samples OOB
+//   inbag_counts.resize(num_samples, 0);
 
-  // Draw num_samples samples with replacement (n out of n) as inbag and mark as not OOB
-  for (size_t s = 0; s < num_samples_inbag; ++s) {
-    size_t draw = weighted_dist(random_number_generator);
-    sampleIDs.push_back(draw);
-    ++inbag_counts[draw];
-  }
+//   // Draw num_samples samples with replacement (n out of n) as inbag and mark as not OOB
+//   for (size_t s = 0; s < num_samples_inbag; ++s) {
+//     size_t draw = weighted_dist(random_number_generator);
+//     sampleIDs.push_back(draw);
+//     ++inbag_counts[draw];
+//   }
 
-  // Save OOB samples. In holdout mode these are the cases with 0 weight.
-  if (holdout) {
-    for (size_t s = 0; s < (*case_weights).size(); ++s) {
-      if ((*case_weights)[s] == 0) {
-        oob_sampleIDs.push_back(s);
-      }
-    }
-  } else {
-    for (size_t s = 0; s < inbag_counts.size(); ++s) {
-      if (inbag_counts[s] == 0) {
-        oob_sampleIDs.push_back(s);
-      }
-    }
-  }
-  num_samples_oob = oob_sampleIDs.size();
+//   // Save OOB samples. In holdout mode these are the cases with 0 weight.
+//   if (holdout) {
+//     for (size_t s = 0; s < (*case_weights).size(); ++s) {
+//       if ((*case_weights)[s] == 0) {
+//         oob_sampleIDs.push_back(s);
+//       }
+//     }
+//   } else {
+//     for (size_t s = 0; s < inbag_counts.size(); ++s) {
+//       if (inbag_counts[s] == 0) {
+//         oob_sampleIDs.push_back(s);
+//       }
+//     }
+//   }
+//   num_samples_oob = oob_sampleIDs.size();
 
-  if (!keep_inbag) {
-    inbag_counts.clear();
-    inbag_counts.shrink_to_fit();
-  }
-}
+//   if (!keep_inbag) {
+//     inbag_counts.clear();
+//     inbag_counts.shrink_to_fit();
+//   }
+// }
 
-void TreeGroup::bootstrapWithoutReplacement() {
+// void TreeGroup::bootstrapWithoutReplacement() {
 
-  // Use fraction (default 63.21%) of the samples
-  size_t num_samples_inbag = (size_t) num_samples * (*sample_fraction)[0];
-  shuffleAndSplit(sampleIDs, oob_sampleIDs, num_samples, num_samples_inbag, random_number_generator);
-  num_samples_oob = oob_sampleIDs.size();
+//   // Use fraction (default 63.21%) of the samples
+//   size_t num_samples_inbag = (size_t) num_samples * (*sample_fraction)[0];
+//   shuffleAndSplit(sampleIDs, oob_sampleIDs, num_samples, num_samples_inbag, random_number_generator);
+//   num_samples_oob = oob_sampleIDs.size();
 
-  if (keep_inbag) {
-    // All observation are 0 or 1 times inbag
-    inbag_counts.resize(num_samples, 1);
-    for (size_t i = 0; i < oob_sampleIDs.size(); i++) {
-      inbag_counts[oob_sampleIDs[i]] = 0;
-    }
-  }
-}
+//   if (keep_inbag) {
+//     // All observation are 0 or 1 times inbag
+//     inbag_counts.resize(num_samples, 1);
+//     for (size_t i = 0; i < oob_sampleIDs.size(); i++) {
+//       inbag_counts[oob_sampleIDs[i]] = 0;
+//     }
+//   }
+// }
 
-void TreeGroup::bootstrapWithoutReplacementWeighted() {
+// void TreeGroup::bootstrapWithoutReplacementWeighted() {
 
-  // Use fraction (default 63.21%) of the samples
-  size_t num_samples_inbag = (size_t) num_samples * (*sample_fraction)[0];
-  drawWithoutReplacementWeighted(sampleIDs, random_number_generator, num_samples - 1, num_samples_inbag, *case_weights);
+//   // Use fraction (default 63.21%) of the samples
+//   size_t num_samples_inbag = (size_t) num_samples * (*sample_fraction)[0];
+//   drawWithoutReplacementWeighted(sampleIDs, random_number_generator, num_samples - 1, num_samples_inbag, *case_weights);
 
-  // All observation are 0 or 1 times inbag
-  inbag_counts.resize(num_samples, 0);
-  for (auto& sampleID : sampleIDs) {
-    inbag_counts[sampleID] = 1;
-  }
+//   // All observation are 0 or 1 times inbag
+//   inbag_counts.resize(num_samples, 0);
+//   for (auto& sampleID : sampleIDs) {
+//     inbag_counts[sampleID] = 1;
+//   }
 
-  // Save OOB samples. In holdout mode these are the cases with 0 weight.
-  if (holdout) {
-    for (size_t s = 0; s < (*case_weights).size(); ++s) {
-      if ((*case_weights)[s] == 0) {
-        oob_sampleIDs.push_back(s);
-      }
-    }
-  } else {
-    for (size_t s = 0; s < inbag_counts.size(); ++s) {
-      if (inbag_counts[s] == 0) {
-        oob_sampleIDs.push_back(s);
-      }
-    }
-  }
-  num_samples_oob = oob_sampleIDs.size();
+//   // Save OOB samples. In holdout mode these are the cases with 0 weight.
+//   if (holdout) {
+//     for (size_t s = 0; s < (*case_weights).size(); ++s) {
+//       if ((*case_weights)[s] == 0) {
+//         oob_sampleIDs.push_back(s);
+//       }
+//     }
+//   } else {
+//     for (size_t s = 0; s < inbag_counts.size(); ++s) {
+//       if (inbag_counts[s] == 0) {
+//         oob_sampleIDs.push_back(s);
+//       }
+//     }
+//   }
+//   num_samples_oob = oob_sampleIDs.size();
 
-  if (!keep_inbag) {
-    inbag_counts.clear();
-    inbag_counts.shrink_to_fit();
-  }
-}
+//   if (!keep_inbag) {
+//     inbag_counts.clear();
+//     inbag_counts.shrink_to_fit();
+//   }
+// }
 
 void TreeGroup::bootstrapClassWise() {
   // Empty on purpose (virtual function only implemented in classification and probability)
