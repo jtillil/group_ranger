@@ -142,6 +142,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       } else {
         if (use_grouped_variables) {
           forestgroup = std::make_unique<ForestClassificationGroup>();
+          printf("You got past forest assignment\n");
         } else {
           forest = std::make_unique<ForestClassification>();
         }
