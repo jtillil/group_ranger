@@ -43,7 +43,7 @@ public:
       std::vector<double>* sample_fraction, double alpha, double minprop, bool holdout, uint num_random_splits,
       uint max_depth, std::vector<double>* regularization_factor, bool regularization_usedepth,
       std::vector<bool>* split_groupIDs_used, bool* use_grouped_variables,
-    std::vector<std::vector<uint>>* groups, uint* num_groups, std::string* splitmethod);
+    std::vector<std::vector<uint>>* groups, uint num_groups, std::string* splitmethod);
 
   virtual void allocateMemory() = 0;
 
@@ -241,7 +241,7 @@ protected:
   // Group specific members
   bool use_grouped_variables;
   const std::vector<std::vector<uint>>* groups;
-  const uint* num_groups;
+  uint num_groups;
   const std::string* splitmethod;
 };
 

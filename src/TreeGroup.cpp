@@ -46,7 +46,7 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
     std::vector<size_t>* manual_inbag, bool keep_inbag, std::vector<double>* sample_fraction, double alpha,
     double minprop, bool holdout, uint num_random_splits, uint max_depth, std::vector<double>* regularization_factor,
     bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool* use_grouped_variables,
-    std::vector<std::vector<uint>>* groups, uint* num_groups, std::string* splitmethod) {
+    std::vector<std::vector<uint>>* groups, uint num_groups, std::string* splitmethod) {
 
   this->data = data;
   this->mtry = mtry;
