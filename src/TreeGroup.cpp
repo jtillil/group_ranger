@@ -100,27 +100,27 @@ void TreeGroup::grow(std::vector<double>* variable_importance) {
   this->variable_importance = variable_importance;
 
   // Bootstrap, dependent if weighted or not and with or without replacement
-  if (!case_weights->empty()) {
-    if (sample_with_replacement) {
-      bootstrapWeighted();
-    } else {
-      bootstrapWithoutReplacementWeighted();
-    }
-  } else if (sample_fraction->size() > 1) {
-    if (sample_with_replacement) {
-      bootstrapClassWise();
-    } else {
-      bootstrapWithoutReplacementClassWise();
-    }
-  } else if (!manual_inbag->empty()) {
-    setManualInbag();
-  } else {
-    if (sample_with_replacement) {
+  // if (!case_weights->empty()) {
+  //   if (sample_with_replacement) {
+  //     bootstrapWeighted();
+  //   } else {
+  //     bootstrapWithoutReplacementWeighted();
+  //   }
+  // } else if (sample_fraction->size() > 1) {
+  //   if (sample_with_replacement) {
+  //     bootstrapClassWise();
+  //   } else {
+  //     bootstrapWithoutReplacementClassWise();
+  //   }
+  // } else if (!manual_inbag->empty()) {
+  //   setManualInbag();
+  // } else {
+  //   if (sample_with_replacement) {
       bootstrap();
-    } else {
-      bootstrapWithoutReplacement();
-    }
-  }
+  //   } else {
+  //     bootstrapWithoutReplacement();
+  //   }
+  // }
 
   // Init start and end positions
   start_pos[0] = 0;
