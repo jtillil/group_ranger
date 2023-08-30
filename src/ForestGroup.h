@@ -61,7 +61,7 @@ public:
       PredictionType prediction_type, uint num_random_splits, bool order_snps, uint max_depth,
       const std::vector<double>& regularization_factor, bool regularization_usedepth,
       // group specific arguments
-      bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod);
+      bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod, bool debug);
   void init(std::unique_ptr<Data> input_data, uint mtry, std::string output_prefix,
       uint num_trees, uint seed, uint num_threads, ImportanceMode importance_mode, uint min_node_size, uint min_bucket,
       bool prediction_mode, bool sample_with_replacement, const std::vector<std::string>& unordered_variable_names,
@@ -69,7 +69,7 @@ public:
       double alpha, double minprop, bool holdout, PredictionType prediction_type, uint num_random_splits,
       bool order_snps, uint max_depth, const std::vector<double>& regularization_factor, bool regularization_usedepth,
       // group specific arguments
-      bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod);
+      bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod, bool debug);
   virtual void initInternal() = 0;
 
   // Grow or predict
@@ -211,12 +211,6 @@ protected:
   uint num_random_splits;
   uint max_depth;
 
-  // Group specific members
-  bool use_grouped_variables;
-  std::vector<std::vector<uint>> groups;
-  uint num_groups;
-  std::string splitmethod;
-
   // MAXSTAT splitrule
   double alpha;
   double minprop;
@@ -267,6 +261,14 @@ protected:
   size_t aborted_threads;
   bool aborted;
 #endif
+
+  // Group specific members
+  bool use_grouped_variables;
+  std::vector<std::vector<uint>> groups;
+  uint num_groups;
+  std::string splitmethod;
+  bool debug;
+  
 };
 
 } // namespace ranger

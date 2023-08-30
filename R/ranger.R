@@ -228,7 +228,7 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
                    dependent.variable.name = NULL, status.variable.name = NULL, 
                    classification = NULL, x = NULL, y = NULL,
                    #### group specific arguments
-                   use_grouped_variables = FALSE, groups = NULL, splitmethod = "LDA", ...) {
+                   use_grouped_variables = FALSE, groups = NULL, splitmethod = "LDA", debug = false, ...) {
   
   ## Handle ... arguments
   if (length(list(...)) > 0) {
@@ -890,7 +890,7 @@ ranger <- function(formula = NULL, data = NULL, num.trees = 500, mtry = NULL,
                       inbag, use.inbag, 
                       regularization.factor, use.regularization.factor, regularization.usedepth,
                       #### group specific arguments
-                      use_grouped_variables, groups, length(groups), splitmethod)
+                      use_grouped_variables, groups, length(groups), splitmethod, debug)
   
   if (length(result) == 0) {
     stop("User interrupt or internal error.")

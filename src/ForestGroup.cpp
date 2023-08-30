@@ -19,6 +19,7 @@
 #include <thread>
 #include <chrono>
 
+#include "Rcpp.h"
 #include "utility.h"
 #include "ForestGroup.h"
 #include "DataChar.h"
@@ -148,15 +149,19 @@ void ForestGroup::initR(std::unique_ptr<Data> input_data, uint mtry, uint num_tr
     uint num_random_splits, bool order_snps, uint max_depth, const std::vector<double>& regularization_factor,
     bool regularization_usedepth,
     // group specific arguments
-    bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod) {
+    bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod, bool debug) {
 
   this->verbose_out = verbose_out;
+
+  if (debug) {
+    Rcpp::Rprintf("Start forest init.");
+  }
 
   // Call other init function
   init(std::move(input_data), mtry, "", num_trees, seed, num_threads, importance_mode, min_node_size, min_bucket,
       prediction_mode, sample_with_replacement, unordered_variable_names, memory_saving_splitting, splitrule,
       predict_all, sample_fraction, alpha, minprop, holdout, prediction_type, num_random_splits, order_snps, max_depth,
-      regularization_factor, regularization_usedepth, use_grouped_variables, groups, num_groups, splitmethod);
+      regularization_factor, regularization_usedepth, use_grouped_variables, groups, num_groups, splitmethod, debug);
 
   // Set variables to be always considered for splitting
   if (!always_split_variable_names.empty()) {
@@ -192,7 +197,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
     double alpha, double minprop, bool holdout, PredictionType prediction_type, uint num_random_splits, bool order_snps,
     uint max_depth, const std::vector<double>& regularization_factor, bool regularization_usedepth,
     // group specific arguments
-    bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod) {
+    bool use_grouped_variables, std::vector<std::vector<uint>> groups, uint num_groups, std::string splitmethod, bool debug) {
 
   // TEST
 
@@ -250,6 +255,10 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
   // Set unordered factor variables
   if (!prediction_mode) {
     data->setIsOrderedVariable(unordered_variable_names);
+  }
+
+  if (debug) {
+    Rcpp::Rprintf("Start internal forest init.");
   }
 
   initInternal();
