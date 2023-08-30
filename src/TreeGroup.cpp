@@ -24,8 +24,8 @@ TreeGroup::TreeGroup() :
         false), split_groupIDs_used(0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(
         true), sample_fraction(0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0), use_grouped_variables(DEFAULT_USE_GROUPED_VARIABLES), groups(DEFAULT_GROUPS), num_groups(DEFAULT_NUM_GROUPS), splitmethod(
-        DEFAULT_SPLITMETHOD) {
+        0), use_grouped_variables(true), groups(0), num_groups(0), splitmethod(
+        0) {
 }
 
 TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_groupIDs,
@@ -36,8 +36,8 @@ TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vecto
         0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(true), sample_fraction(
         0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0), use_grouped_variables(DEFAULT_USE_GROUPED_VARIABLES), groups(DEFAULT_GROUPS), num_groups(DEFAULT_NUM_GROUPS), splitmethod(
-        DEFAULT_SPLITMETHOD) {
+        0), use_grouped_variables(true), groups(0), num_groups(0), splitmethod(
+        0) {
 }
 
 void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed, std::vector<size_t>* deterministic_varIDs,
@@ -45,8 +45,8 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
     bool sample_with_replacement, bool memory_saving_splitting, SplitRule splitrule, std::vector<double>* case_weights,
     std::vector<size_t>* manual_inbag, bool keep_inbag, std::vector<double>* sample_fraction, double alpha,
     double minprop, bool holdout, uint num_random_splits, uint max_depth, std::vector<double>* regularization_factor,
-    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool& use_grouped_variables,
-    std::vector<std::vector<uint>>& groups, uint& num_groups, std::string& splitmethod) {
+    bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool* use_grouped_variables,
+    std::vector<std::vector<uint>>* groups, uint* num_groups, std::string* splitmethod) {
 
   this->data = data;
   this->mtry = mtry;
@@ -80,10 +80,10 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
   this->regularization_factor = regularization_factor;
   this->regularization_usedepth = regularization_usedepth;
   this->split_groupIDs_used = split_groupIDs_used;
-  // this->use_grouped_variables = use_grouped_variables;
-  // this->groups = groups;
-  // this->num_groups = num_groups;
-  // this->splitmethod = splitmethod;
+  this->use_grouped_variables = use_grouped_variables;
+  this->groups = groups;
+  this->num_groups = num_groups;
+  this->splitmethod = splitmethod;
 
   // Regularization
   if (regularization_factor->size() > 0) {
@@ -290,8 +290,8 @@ void TreeGroup::appendToFile(std::ofstream& file) {
 
 void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
 
-  // size_t num_groups = data->getNumCols();
-  // Just take num_groups argument passed down from forest
+  // size_t num_groups_size_t = num_groups;
+  // Just take num_groups argument passed down from forestS
 
   // For corrected Gini importance add dummy variables
   if (importance_mode == IMP_GINI_CORRECTED) {
