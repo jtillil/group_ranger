@@ -301,15 +301,15 @@ void TreeGroup::createPossibleSplitGroupSubset(std::vector<size_t>& result) {
   }
 
   // Randomly add non-deterministic variables (according to weights if needed)
-  if (split_select_weights->empty()) {
-    if (deterministic_varIDs->empty()) {
+  // if (split_select_weights->empty()) {
+  //   if (deterministic_varIDs->empty()) {
       drawWithoutReplacement(result, random_number_generator, num_groups, mtry);
-    } else {
-      drawWithoutReplacementSkip(result, random_number_generator, num_groups, (*deterministic_varIDs), mtry);
-    }
-  } else {
-    drawWithoutReplacementWeighted(result, random_number_generator, num_groups, mtry, *split_select_weights);
-  }
+  //   } else {
+  //     drawWithoutReplacementSkip(result, random_number_generator, num_groups, (*deterministic_varIDs), mtry);
+  //   }
+  // } else {
+  //   drawWithoutReplacementWeighted(result, random_number_generator, num_groups, mtry, *split_select_weights);
+  // }
 
   // Always use deterministic variables
   std::copy(deterministic_varIDs->begin(), deterministic_varIDs->end(), std::inserter(result, result.end()));
