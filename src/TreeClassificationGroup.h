@@ -107,11 +107,11 @@ private:
   // Splitting weights
   const std::vector<double>* class_weights;
 
-  // Group specific arguments
-  // const bool* use_grouped_variables;
-  // const std::vector<std::vector<uint>>* groups;
-  // const uint* num_groups;
-  // const std::string* splitmethod;
+  // Group specific members
+  bool* use_grouped_variables;
+  const std::vector<std::vector<uint>>* groups;
+  uint* num_groups;
+  const std::string* splitmethod;
 
   std::vector<size_t> counter;
   std::vector<size_t> counter_per_class;
