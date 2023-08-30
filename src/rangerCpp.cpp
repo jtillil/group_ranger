@@ -388,6 +388,10 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     if (!verbose) {
       delete verbose_out;
     }
+  } catch (std::runtime_error& e) {
+    Rcpp::Rcerr << "Runtime error: " << e.what() << " Ranger will EXIT now." << std::endl;
+  } catch (std::logic_error& e) {
+    Rcpp::Rcerr << "Logic error: " << e.what() << " Ranger will EXIT now." << std::endl;
   } catch (std::exception& e) {
     if (strcmp(e.what(), "User interrupt.") != 0) {
       // Rprintf(e.what());
