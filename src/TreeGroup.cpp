@@ -24,7 +24,7 @@ TreeGroup::TreeGroup() :
         false), split_groupIDs_used(0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(
         true), sample_fraction(0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0), use_grouped_variables(true), groups(0), num_groups(0), splitmethod(
+        0), use_grouped_variables(0), groups(0), num_groups(0), splitmethod(
         0) {
 }
 
