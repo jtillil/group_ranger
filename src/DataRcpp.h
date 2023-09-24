@@ -83,6 +83,9 @@ public:
         x_out[i].push_back(get_x(i, j));
       }
     }
+
+    printf("Finished get_x_subset() in DataRcpp\n");
+
     return x_out;
 
   }
