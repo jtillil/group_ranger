@@ -227,7 +227,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     const std::vector<size_t>& class_counts, size_t num_samples_node, double& best_value, std::vector<double>& best_coefficients, size_t& best_groupID,
     double& best_decrease) {
 
-  printf("Started findBestSplitValueUnordered()\n");
+  printf("Starting findBestSplitValueUnordered()\n");
 
   // Setup variables
   bool success = false;

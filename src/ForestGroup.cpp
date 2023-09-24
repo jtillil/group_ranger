@@ -157,7 +157,7 @@ void ForestGroup::initR(std::unique_ptr<Data> input_data, uint mtry, uint num_tr
   this->verbose_out = verbose_out;
 
   if (debug) {
-    printf("Start forest init.");
+    printf("Starting forest init\n");
   }
 
   // Call other init function
@@ -261,7 +261,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
   }
 
   if (debug) {
-    printf("Start internal forest init.");
+    printf("Starting internal forest init\n");
   }
 
   initInternal();

@@ -92,7 +92,7 @@ public:
 
   std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
 
-    printf("Started get_x_subset() in DataRcpp\n");
+    printf("Starting get_x_subset() in DataRcpp\n");
 
     std::vector<std::vector<double>> x_out(row.size(), std::vector<double>(col.size()));
     for (size_t i = 0; i < row.size(); ++i) {
@@ -101,7 +101,7 @@ public:
       }
     }
 
-    printf("%zu", x_out.size());
+    printf("%zu\n", x_out.size());
 
     printf("Finished get_x_subset() in DataRcpp\n");
 
