@@ -75,6 +75,8 @@ public:
   // WRITTEN FOR GROUP RANGER IMPLEMENTATION
   std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
 
+    printf("Started get_x_subset() in DataRcpp\n");
+
     std::vector<std::vector<double>> x_out;
     for (size_t i = 0; i < row.size(); ++i) {
       for (size_t j = 0; j < col.size(); ++j) {

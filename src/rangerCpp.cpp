@@ -245,6 +245,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
 
     // Run Ranger
     if (use_grouped_variables) {
+      printf("Starting forestgroup run\n");
       forestgroup->run(false, oob_error);
     } else {
       forest->run(false, oob_error);

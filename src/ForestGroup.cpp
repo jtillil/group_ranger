@@ -312,11 +312,16 @@ void ForestGroup::run(bool verbose, bool compute_oob_error) {
     if (verbose && verbose_out) {
       *verbose_out << "Predicting .." << std::endl;
     }
+
+    printf("Starting predict()\n");
+
     predict();
   } else {
     if (verbose && verbose_out) {
       *verbose_out << "Growing trees .." << std::endl;
     }
+
+    printf("Starting grow()\n");
 
     grow();
 
@@ -325,6 +330,8 @@ void ForestGroup::run(bool verbose, bool compute_oob_error) {
     }
 
     if (compute_oob_error) {
+
+      printf("Starting computePredictionError()\n");
       computePredictionError();
     }
 
@@ -333,6 +340,7 @@ void ForestGroup::run(bool verbose, bool compute_oob_error) {
       if (verbose && verbose_out) {
         *verbose_out << "Computing permutation variable importance .." << std::endl;
       }
+      printf("Starting computePermutationImportance()\n");
       computePermutationImportance();
     }
   }
