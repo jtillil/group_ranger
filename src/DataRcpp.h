@@ -101,6 +101,8 @@ public:
       }
     }
 
+    printf("%zu", x_out.size());
+
     printf("Finished get_x_subset() in DataRcpp\n");
 
     return x_out;
