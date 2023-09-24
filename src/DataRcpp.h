@@ -73,14 +73,31 @@ public:
   }
 
   // WRITTEN FOR GROUP RANGER IMPLEMENTATION
+  // std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+
+  //   printf("Started get_x_subset() in DataRcpp\n");
+
+  //   std::vector<std::vector<double>> x_out;
+  //   for (size_t i = 0; i < row.size(); ++i) {
+  //     for (size_t j = 0; j < col.size(); ++j) {
+  //       x_out[i].push_back(get_x(i, j));
+  //     }
+  //   }
+
+  //   printf("Finished get_x_subset() in DataRcpp\n");
+
+  //   return x_out;
+
+  // }
+
   std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
 
     printf("Started get_x_subset() in DataRcpp\n");
 
-    std::vector<std::vector<double>> x_out;
+    std::vector<std::vector<double>> x_out(row.size(), col.size());
     for (size_t i = 0; i < row.size(); ++i) {
       for (size_t j = 0; j < col.size(); ++j) {
-        x_out[i].push_back(get_x(i, j));
+        x_out[i][j] = get_x(row[i], col[j]);  // corrected indices
       }
     }
 
@@ -89,6 +106,7 @@ public:
     return x_out;
 
   }
+
 
   std::vector<double> get_y_subset(std::vector<size_t> row) const override {
 
