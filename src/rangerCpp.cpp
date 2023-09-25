@@ -292,6 +292,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     if (use_grouped_variables) {
       result.push_back(forestgroup->getNumTrees(), "num.trees");
       result.push_back(forestgroup->getNumIndependentVariables(), "num.independent.variables");
+      result.push_back(forestgroup->getNumGroups(), "num.groups"); // TODO
       if (!prediction_mode) {
         result.push_back(forestgroup->getMtry(), "mtry");
         result.push_back(forestgroup->getMinNodeSize(), "min.node.size");
@@ -341,6 +342,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
         forest_object.push_back(forestgroup->getChildNodeIDs(), "child.nodeIDs");
         forest_object.push_back(forestgroup->getSplitGroupIDs(), "split.groupIDs");
         forest_object.push_back(forestgroup->getSplitValues(), "split.values");
+        forest_object.push_back(forestgroup->getSplitCoefficients(), "split.coefficients"); // TODO
         forest_object.push_back(forestgroup->getIsOrderedVariable(), "is.ordered");
 
         if (snp_data.nrow() > 1 && order_snps) {
@@ -353,7 +355,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
           auto& temp = dynamic_cast<ForestClassificationGroup&>(*forestgroup);
           forest_object.push_back(temp.getClassValues(), "class.values");
         }
-        result.push_back(forest_object, "forestgroup");
+        result.push_back(forest_object, "forest");
       }
     } else {
       if (write_forest) {
