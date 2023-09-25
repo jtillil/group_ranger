@@ -262,12 +262,42 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     x2 = data->get_x_subset(sampleIDs2, group);
 
     // Convert to Eigen::MatrixXd
+    // for (uint j = 0; j < std::max(x1[0].size(), x2[0].size()); ++j) {
+    //     for (uint i = 0; i < x1.size(); ++i) {
+    //         x1Eigen(i, j) = x1[i][j];
+    //     }
+    //     for (uint i = 0; i < x2.size(); ++i) {
+    //         x2Eigen(i, j) = x2[i][j];
+    //     }
+    // }
+
+    // Ensure that x1 and x2 are non-empty and have valid dimensions
+    if (x1.empty() || x2.empty() || x1[0].empty() || x2[0].empty()) {
+        Rcpp::Rcerr << "Error: x1 or x2 are empty or have invalid dimensions." << std::endl;
+        return;
+    }
+
+    // Ensure proper initialization and size for x1Eigen and x2Eigen
+    x1Eigen.resize(x1.size(), x1[0].size());
+    x2Eigen.resize(x2.size(), x2[0].size());
+
+    // Convert to Eigen::MatrixXd with bounds checking
     for (uint j = 0; j < std::max(x1[0].size(), x2[0].size()); ++j) {
         for (uint i = 0; i < x1.size(); ++i) {
-            x1Eigen(i, j) = x1[i][j];
+            if (j < x1[i].size()) {
+                x1Eigen(i, j) = x1[i][j];
+            } else {
+                Rcpp::Rcerr << "Error: Index out of bounds in x1 conversion to Eigen::MatrixXd." << std::endl;
+                return;
+            }
         }
         for (uint i = 0; i < x2.size(); ++i) {
-            x2Eigen(i, j) = x2[i][j];
+            if (j < x2[i].size()) {
+                x2Eigen(i, j) = x2[i][j];
+            } else {
+                Rcpp::Rcerr << "Error: Index out of bounds in x2 conversion to Eigen::MatrixXd." << std::endl;
+                return;
+            }
         }
     }
   }
