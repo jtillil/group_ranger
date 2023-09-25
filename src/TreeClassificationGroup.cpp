@@ -302,6 +302,9 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
   }
 
+  Rcpp::Rcout << x1Eigen << std::endl;
+  Rcpp::Rcout << x2Eigen << std::endl;
+
   // Calculate split hyperplane
   std::vector<double> hyperplane;
   if (*splitmethod == "LDA") {
