@@ -26,7 +26,7 @@ public:
   TreeClassificationGroup(std::vector<double>* class_values, std::vector<uint>* response_classIDs,
       std::vector<std::vector<size_t>>* sampleIDs_per_class, std::vector<double>* class_weights,
       bool* use_grouped_variables, std::vector<std::vector<uint>>* groups,
-      uint* num_groups, std::string* splitmethod);
+      uint* num_groups, std::string* splitmethod, bool* debug);
 
   // Create from loaded forest
   TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vector<size_t>& split_groupIDs,
