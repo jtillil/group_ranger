@@ -114,7 +114,7 @@ void ForestClassificationGroup::growInternal() {
   for (size_t i = 0; i < num_trees; ++i) {
     trees.push_back(
         std::make_unique<TreeClassificationGroup>(&class_values, &response_classIDs, &sampleIDs_per_class, &class_weights,
-        &use_grouped_variables, &groups, &num_groups, &splitmethod));
+        &use_grouped_variables, &groups, &num_groups, &splitmethod, &debug));
   }
 }
 

@@ -246,6 +246,7 @@ protected:
   const std::vector<std::vector<uint>>* groups;
   uint* num_groups;
   const std::string* splitmethod;
+  bool* debug;
 };
 
 } // namespace ranger

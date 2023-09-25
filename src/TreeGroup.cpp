@@ -31,7 +31,7 @@ TreeGroup::TreeGroup() :
         false), split_groupIDs_used(0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(
         true), sample_fraction(0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0), use_grouped_variables(0), groups(0), num_groups(0), splitmethod(
+        0), use_grouped_variables(0), groups(0), num_groups(0), splitmethod(0), debug(
         0) {
 }
 
@@ -43,7 +43,7 @@ TreeGroup::TreeGroup(std::vector<std::vector<size_t>>& child_nodeIDs, std::vecto
         0), variable_importance(0), importance_mode(DEFAULT_IMPORTANCE_MODE), sample_with_replacement(true), sample_fraction(
         0), memory_saving_splitting(false), splitrule(DEFAULT_SPLITRULE), alpha(DEFAULT_ALPHA), minprop(
         DEFAULT_MINPROP), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(DEFAULT_MAXDEPTH), depth(0), last_left_nodeID(
-        0), use_grouped_variables(0), groups(0), num_groups(0), splitmethod(
+        0), use_grouped_variables(0), groups(0), num_groups(0), splitmethod(0), debug(
         0) {
 }
 
@@ -53,7 +53,7 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
     std::vector<size_t>* manual_inbag, bool keep_inbag, std::vector<double>* sample_fraction, double alpha,
     double minprop, bool holdout, uint num_random_splits, uint max_depth, std::vector<double>* regularization_factor,
     bool regularization_usedepth, std::vector<bool>* split_groupIDs_used, bool* use_grouped_variables,
-    std::vector<std::vector<uint>>* groups, uint* num_groups, std::string* splitmethod) {
+    std::vector<std::vector<uint>>* groups, uint* num_groups, std::string* splitmethod, bool* debug) {
 
   this->data = data;
   this->mtry = mtry;
@@ -91,6 +91,7 @@ void TreeGroup::init(const Data* data, uint mtry, size_t num_samples, uint seed,
   this->groups = groups;
   this->num_groups = num_groups;
   this->splitmethod = splitmethod;
+  this->debug = debug;
 
   // Regularization
   if (regularization_factor->size() > 0) {
