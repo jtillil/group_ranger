@@ -38,10 +38,16 @@
 print.ranger <- function(x, ...) {
   cat("Ranger result\n\n")
   cat("Call:\n", deparse(x$call), "\n\n")
+  if (x$use.grouped.variables) {
+    cat("Uses grouped variables.\n\n")
+  }
   cat("Type:                            ", x$treetype, "\n")
   cat("Number of trees:                 ", x$num.trees, "\n")
   cat("Sample size:                     ", x$num.samples, "\n")
   cat("Number of independent variables: ", x$num.independent.variables, "\n")
+  if (x$use.grouped.variables) {
+    cat("Number of variable groups:       ", x$num.groups, "\n")
+  }
   cat("Mtry:                            ", x$mtry, "\n")
   cat("Target node size:                ", x$min.node.size, "\n")
   cat("Variable importance mode:        ", x$importance.mode, "\n")

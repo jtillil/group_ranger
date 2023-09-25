@@ -289,6 +289,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     printf("You got until returning output\n");
     
     // Return output
+    result.push_back(use_grouped_variables, "use.grouped.variables");
     if (use_grouped_variables) {
       result.push_back(forestgroup->getNumTrees(), "num.trees");
       result.push_back(forestgroup->getNumIndependentVariables(), "num.independent.variables");
