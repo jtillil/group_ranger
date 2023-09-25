@@ -32,10 +32,10 @@ namespace ranger {
 TreeClassificationGroup::TreeClassificationGroup(std::vector<double>* class_values, std::vector<uint>* response_classIDs,
     std::vector<std::vector<size_t>>* sampleIDs_per_class, std::vector<double>* class_weights,
     bool* use_grouped_variables, std::vector<std::vector<uint>>* groups,
-    uint* num_groups, std::string* splitmethod) :
+    uint* num_groups, std::string* splitmethod, bool* debug) :
     class_values(class_values), response_classIDs(response_classIDs), sampleIDs_per_class(sampleIDs_per_class), class_weights(
         class_weights), use_grouped_variables(use_grouped_variables), groups(groups), num_groups(num_groups), splitmethod(
-        splitmethod), counter(0), counter_per_class(0) {
+        splitmethod), debug(debug), counter(0), counter_per_class(0) {
 }
 
 TreeClassificationGroup::TreeClassificationGroup(std::vector<std::vector<size_t>>& child_nodeIDs,
