@@ -515,7 +515,7 @@ void ForestGroup::grow() {
         importance_mode, min_node_size, min_bucket, sample_with_replacement, memory_saving_splitting, splitrule, &case_weights,
         tree_manual_inbag, keep_inbag, &sample_fraction, alpha, minprop, holdout, num_random_splits, max_depth,
         &regularization_factor, regularization_usedepth, &split_varIDs_used, &use_grouped_variables,
-        &groups, &num_groups, &splitmethod);
+        &groups, &num_groups, &splitmethod, &debug);
   }
 
   // Init variable importance
