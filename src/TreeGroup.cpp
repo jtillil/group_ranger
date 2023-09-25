@@ -9,18 +9,18 @@
  R package "ranger" under GPL3 license.
  #-------------------------------------------------------------------------------*/
 
-// #include <Rcpp.h>
-// #include <unordered_map>
-// #include <random>
-// #include <algorithm>
+#include <Rcpp.h>
+#include <unordered_map>
+#include <random>
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <vector>
 
-// #include "DataRcpp.h"
+#include "DataRcpp.h"
 #include "TreeGroup.h"
 #include "utility.h"
-// #include "Data.h"
+#include "Data.h"
 #include "hyperplane.h"
 
 namespace ranger {
