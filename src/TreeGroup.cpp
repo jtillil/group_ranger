@@ -15,6 +15,7 @@
 
 #include "TreeGroup.h"
 #include "utility.h"
+#include "hyperplane.h"
 
 namespace ranger {
 
@@ -183,28 +184,28 @@ void TreeGroup::predict(const Data* prediction_data, bool oob_prediction) {
       // Move to child
       size_t split_groupID = split_groupIDs[nodeID];
 
-      std::vector<double> sample = prediction_data->get_x_sample(sample_idx, split_groupID);
-      if (prediction_data->isOrderedVariable(split_groupID)) {
-        if (value <= split_values[nodeID]) {
-          // Move to left child
-          nodeID = child_nodeIDs[0][nodeID];
-        } else {
+      std::vector<double> sample = prediction_data->get_x_sample(sample_idx, (*groups)[split_groupID]);
+      // if (prediction_data->isOrderedVariable(split_groupID)) {
+        if (x_is_in_right_child(sample, split_coefficients[nodeID], split_values[nodeID])) {
           // Move to right child
           nodeID = child_nodeIDs[1][nodeID];
+        } else {
+          // Move to left child
+          nodeID = child_nodeIDs[0][nodeID];
         }
-      } else {
-        size_t factorID = floor(value) - 1;
-        size_t splitID = floor(split_values[nodeID]);
+      // } else {
+      //   size_t factorID = floor(value) - 1;
+      //   size_t splitID = floor(split_values[nodeID]);
 
-        // Left if 0 found at position factorID
-        if (!(splitID & (1ULL << factorID))) {
-          // Move to left child
-          nodeID = child_nodeIDs[0][nodeID];
-        } else {
-          // Move to right child
-          nodeID = child_nodeIDs[1][nodeID];
-        }
-      }
+      //   // Left if 0 found at position factorID
+      //   if (!(splitID & (1ULL << factorID))) {
+      //     // Move to left child
+      //     nodeID = child_nodeIDs[0][nodeID];
+      //   } else {
+      //     // Move to right child
+      //     nodeID = child_nodeIDs[1][nodeID];
+      //   }
+      // }
     }
 
     prediction_terminal_nodeIDs[i] = nodeID;
