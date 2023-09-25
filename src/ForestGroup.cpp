@@ -38,7 +38,7 @@ ForestGroup::ForestGroup() :
         false), prediction_type(DEFAULT_PREDICTIONTYPE), num_random_splits(DEFAULT_NUM_RANDOM_SPLITS), max_depth(
         DEFAULT_MAXDEPTH), alpha(DEFAULT_ALPHA), minprop(DEFAULT_MINPROP), num_threads(DEFAULT_NUM_THREADS), data { }, overall_prediction_error(
         NAN), importance_mode(DEFAULT_IMPORTANCE_MODE), regularization_usedepth(false), progress(0), use_grouped_variables(
-        true), groups({{0}}), num_groups(0), splitmethod("LDA") {
+        true), groups({{0}}), num_groups(0), splitmethod("LDA"), debug(0) {
     printf("This is make_unique<ForestGroup>.\n");
 }
 
@@ -250,6 +250,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
   this->groups = groups;
   this->num_groups = num_groups;
   this->splitmethod = splitmethod;
+  this->debug = debug;
 
   // Set number of samples and variables
   num_samples = data->getNumRows();
