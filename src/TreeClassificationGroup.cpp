@@ -303,13 +303,14 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   }
 
   // printf(x1Eigen);
-  // Rcpp::Rcout << x1Eigen << std::endl;
+  Rcpp::Rcout << x1Eigen << std::endl;
   // printf(x2Eigen);
-  // Rcpp::Rcout << x2Eigen << std::endl;
-  printf("First entries of Eigen matrices:\n");
-  printf("%f", x1Eigen(0, 0));
-  printf("%f", x2Eigen(0, 0));
-  printf("\n");
+  // printf("\n");
+  Rcpp::Rcout << x2Eigen << std::endl;
+  // printf("First entries of Eigen matrices:\n");
+  // printf("%f", x1Eigen(0, 0));
+  // printf("%f", x2Eigen(0, 0));
+  // printf("\n");
 
   // Calculate split hyperplane
   std::vector<double> hyperplane;
