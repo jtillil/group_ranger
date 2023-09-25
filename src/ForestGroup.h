@@ -107,6 +107,13 @@ public:
     }
     return result;
   }
+  std::vector<std::vector<double>> getSplitCoefficients() {
+    std::vector<std::vector<std::vector<double>>> result;
+    for (auto& tree : trees) {
+      result.push_back(tree->getSplitCoefficients());
+    }
+    return result;
+  }
   const std::vector<double>& getVariableImportance() const {
     return variable_importance;
   }
@@ -121,6 +128,9 @@ public:
   }
   size_t getNumTrees() const {
     return num_trees;
+  }
+  size_t getNumGroups() const {
+    return num_groups;
   }
   uint getMtry() const {
     return mtry;

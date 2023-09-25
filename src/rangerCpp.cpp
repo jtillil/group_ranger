@@ -339,8 +339,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       if (write_forest) {
         Rcpp::List forest_object;
         forest_object.push_back(forestgroup->getNumTrees(), "num.trees");
+        forest_object.push_back(forestgroup->getNumGroups(), "num.groups"); // TODO
         forest_object.push_back(forestgroup->getChildNodeIDs(), "child.nodeIDs");
-        forest_object.push_back(forestgroup->getSplitGroupIDs(), "split.groupIDs");
+        forest_object.push_back(forestgroup->getSplitGroupIDs(), "split.groupIDs"); // TODO
         forest_object.push_back(forestgroup->getSplitValues(), "split.values");
         forest_object.push_back(forestgroup->getSplitCoefficients(), "split.coefficients"); // TODO
         forest_object.push_back(forestgroup->getIsOrderedVariable(), "is.ordered");
