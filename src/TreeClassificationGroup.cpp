@@ -309,6 +309,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   printf("First entries of Eigen matrices:\n");
   printf("%f", x1Eigen(0, 0));
   printf("%f", x2Eigen(0, 0));
+  printf("\n");
 
   // Calculate split hyperplane
   std::vector<double> hyperplane;
