@@ -107,7 +107,7 @@ public:
     }
     return result;
   }
-  std::vector<std::vector<double>> getSplitCoefficients() {
+  std::vector<std::vector<std::vector<double>>> getSplitCoefficients() {
     std::vector<std::vector<std::vector<double>>> result;
     for (auto& tree : trees) {
       result.push_back(tree->getSplitCoefficients());
