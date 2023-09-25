@@ -302,7 +302,9 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
   }
 
+  printf("x1");
   Rcpp::Rcout << x1Eigen << std::endl;
+  printf("x2");
   Rcpp::Rcout << x2Eigen << std::endl;
 
   // Calculate split hyperplane
