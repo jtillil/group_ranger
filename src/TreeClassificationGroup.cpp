@@ -302,9 +302,9 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
   }
 
-  printf("%d", debug);
+  printf("%d", (*debug));
 
-  if (debug) {
+  if (*debug) {
     // Print matrices
     printf("x1Eigen:\n");
     Rcpp::Rcout << x1Eigen << std::endl;
