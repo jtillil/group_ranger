@@ -76,7 +76,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     std::unique_ptr<ForestGroup> forestgroup { };
     std::unique_ptr<Data> data { };
     
+    if (debug) {
     printf("You got past forest declaration\n");
+    }
 
     // Empty split select weights and always split variables if not used
     if (!use_split_select_weights) {
@@ -133,7 +135,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     }
 
+    if (debug) {
     printf("You got until forest assignment\n");
+    }
 
     switch (treetype) {
     case TREE_CLASSIFICATION:
@@ -163,14 +167,18 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     SplitRule splitrule = (SplitRule) splitrule_r;
     PredictionType prediction_type = (PredictionType) prediction_type_r;
 
+    if (debug) {
     printf("You got until rewriting groups\n");
+    }
 
     std::vector<std::vector<uint>> groups_internal;
     for (size_t i = 0; i < num_groups; i++) {
       groups_internal.push_back(groups[i]);
     }
 
+    if (debug) {
     printf("You got until initR\n");
+    }
 
     // Init Ranger
     if (use_grouped_variables) {
@@ -188,7 +196,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
           order_snps, max_depth, regularization_factor, regularization_usedepth);
     }
 
+    if (debug) {
     printf("You got until class weights\n");
+    }
 
     // Load forest object if in prediction mode
     if (prediction_mode) {
@@ -241,7 +251,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       // }
     }
 
+    if (debug) {
     printf("You got until run function\n");
+    }
 
     // Run Ranger
     if (use_grouped_variables) {
@@ -259,7 +271,9 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     }
 
+    if (debug) {
     printf("You got until collecting predictions\n");
+    }
 
     // Use first non-empty dimension of predictions
     if (use_grouped_variables) {
@@ -286,8 +300,10 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     }
 
+    if (debug) {
     printf("You got until returning output\n");
-    
+    }
+
     // Return output
     result.push_back(use_grouped_variables, "use.grouped.variables");
     if (use_grouped_variables) {
@@ -333,8 +349,10 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
       }
     }
 
+    if (debug) {
     printf("You got until saving\n");
-
+    }
+    
     // Save forest if needed
     if (use_grouped_variables) {
       if (write_forest) {

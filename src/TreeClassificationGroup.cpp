@@ -302,8 +302,6 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     }
   }
 
-  printf("%d", (*debug));
-
   if (*debug) {
     // Print matrices
     printf("x1Eigen:\n");
