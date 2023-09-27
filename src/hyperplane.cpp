@@ -97,7 +97,7 @@ bool LDA(Eigen::MatrixXd x1, Eigen::MatrixXd x2, std::vector<double>& hyperplane
 
     /*** R
     print(2)
-    /*
+    */
 
     // Weighted mean covariance matrix
     Eigen::MatrixXd covmat = x1.rows()/(x1.rows()+x2.rows()) * covmat1 + x2.rows()/(x1.rows()+x2.rows()) * covmat2;
