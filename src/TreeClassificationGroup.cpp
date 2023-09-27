@@ -260,8 +260,8 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     // for (uint i = 1; i < groups[groupID].size(); ++i) {
     //   local_group.push_back(groups[groupID][i]);
     // }
-    x1 = data->get_x_subset(sampleIDs1, group, *debug);
-    x2 = data->get_x_subset(sampleIDs2, group, *debug);
+    x1 = data->get_x_subset(sampleIDs1, group, debug);
+    x2 = data->get_x_subset(sampleIDs2, group, debug);
 
     // Convert to Eigen::MatrixXd
     // for (uint j = 0; j < std::max(x1[0].size(), x2[0].size()); ++j) {
@@ -333,7 +333,7 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   for (size_t pos = start_pos[nodeID]; pos < end_pos[nodeID]; ++pos) {
     size_t sampleID = sampleIDs[pos];
 
-    if (x_is_in_right_child_hyperplane((data->get_x_subset({sampleID}, group, *debug))[0], hyperplane)) {
+    if (x_is_in_right_child_hyperplane((data->get_x_subset({sampleID}, group, debug))[0], hyperplane)) {
       uint sample_classID = (*response_classIDs)[sampleID];
       ++class_counts_right[sample_classID];
       ++n_right;
