@@ -225,6 +225,9 @@ protected:
   // Order of 0/1/2 for ordered splitting
   std::vector<std::vector<size_t>> snp_order;
   bool order_snps;
+
+  // debug
+  bool* debug;
 };
 
 } // namespace ranger
