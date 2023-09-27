@@ -905,7 +905,6 @@ std::unique_ptr<Data> ForestGroup::loadDataFromFile(const std::string& data_path
   //   result = std::make_unique<DataChar>();
   //   break;
   // }
-  result = std::make_unique<DataRcpp>();
 
   if (verbose_out)
     *verbose_out << "Loading input file: " << data_path << "." << std::endl;
