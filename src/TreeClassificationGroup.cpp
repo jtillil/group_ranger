@@ -316,6 +316,10 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
   std::vector<double> hyperplane;
   if (*splitmethod == "LDA") {
     bool success = LDA(x1Eigen, x2Eigen, hyperplane);
+    /*** R
+    library(Rfast)
+
+    */
   } else {
     Rcpp::Rcerr << "Error: " << "unknown splitmethod for grouped variables." << " Ranger will EXIT now." << std::endl;
   }

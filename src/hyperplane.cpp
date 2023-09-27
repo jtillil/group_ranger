@@ -21,6 +21,7 @@
 #include <utility>
 #include <vector>
 
+#include "Rcpp.h"
 #include "hyperplane.h"
 #include "utility.h"
 #include "globals.h"
@@ -93,6 +94,10 @@ bool LDA(Eigen::MatrixXd x1, Eigen::MatrixXd x2, std::vector<double>& hyperplane
     Eigen::MatrixXd covmat1 = (centered1.adjoint() * centered1) / double(x1.rows() - 1);
     Eigen::MatrixXd centered2 = x2.rowwise() - mean2.transpose();
     Eigen::MatrixXd covmat2 = (centered2.adjoint() * centered2) / double(x2.rows() - 1);
+
+    /*** R
+    print(2)
+    /*
 
     // Weighted mean covariance matrix
     Eigen::MatrixXd covmat = x1.rows()/(x1.rows()+x2.rows()) * covmat1 + x2.rows()/(x1.rows()+x2.rows()) * covmat2;
