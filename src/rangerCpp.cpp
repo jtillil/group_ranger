@@ -25,7 +25,6 @@
  http://www.imbs-luebeck.de
  #-------------------------------------------------------------------------------*/
 
-#include <boost/stacktrace.hpp>
 #include <Rcpp.h>
 #include <RcppEigen.h>
 #include <vector>
@@ -34,6 +33,7 @@
 #include <memory>
 #include <utility>
 
+#include "boost/stacktrace.hpp"
 #include "globals.h"
 #include "Forest.h"
 #include "ForestClassification.h"
