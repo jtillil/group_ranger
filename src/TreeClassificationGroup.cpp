@@ -320,6 +320,14 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
     Rcpp::Rcerr << "Error: " << "unknown splitmethod for grouped variables." << " Ranger will EXIT now." << std::endl;
   }
 
+  if (*debug) {
+    for(const auto& val : hyerplane) {
+        printf("Hyperplane:\n")
+        Rcpp::Rcout << val << " ";
+        Rcpp::Rcout << std:endl;
+    }
+  }
+
   // Check if success
   if (!success) {
     return;
