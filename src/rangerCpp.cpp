@@ -25,6 +25,7 @@
  http://www.imbs-luebeck.de
  #-------------------------------------------------------------------------------*/
 
+#include <boost/stacktrace.hpp>
 #include <Rcpp.h>
 #include <RcppEigen.h>
 #include <vector>
@@ -419,6 +420,7 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     if (strcmp(e.what(), "User interrupt.") != 0) {
       // Rprintf(e.what());
       Rcpp::Rcerr << "Error: " << e.what() << " Ranger will EXIT now." << std::endl;
+      Rcpp::Rcerr << "Backtrace:\n" << boost::stacktrace::stacktrace() << std::endl;
     }
     return result;
   }
