@@ -205,7 +205,7 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
   // TEST
 
   if (debug) {
-  printf("Number of groups in internal code:")
+  printf("Number of groups in internal code:");
   printf("%i\n", (groups.size()));
   }
 
