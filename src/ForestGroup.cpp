@@ -894,17 +894,18 @@ void ForestGroup::loadDependentVariableNamesFromFile(std::string filename) {
 
 std::unique_ptr<Data> ForestGroup::loadDataFromFile(const std::string& data_path) {
   std::unique_ptr<Data> result { };
-  switch (memory_mode) {
-  case MEM_DOUBLE:
-    result = std::make_unique<DataDouble>();
-    break;
-  case MEM_FLOAT:
-    result = std::make_unique<DataFloat>();
-    break;
-  case MEM_CHAR:
-    result = std::make_unique<DataChar>();
-    break;
-  }
+  // switch (memory_mode) {
+  // case MEM_DOUBLE:
+  //   result = std::make_unique<DataDouble>();
+  //   break;
+  // case MEM_FLOAT:
+  //   result = std::make_unique<DataFloat>();
+  //   break;
+  // case MEM_CHAR:
+  //   result = std::make_unique<DataChar>();
+  //   break;
+  // }
+  result = std::make_unique<DataRcpp>();
 
   if (verbose_out)
     *verbose_out << "Loading input file: " << data_path << "." << std::endl;
