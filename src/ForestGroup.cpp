@@ -204,7 +204,10 @@ void ForestGroup::init(std::unique_ptr<Data> input_data, uint mtry, std::string 
 
   // TEST
 
-  printf("%i\n", groups[1][1]);
+  if (debug) {
+  printf("Number of groups in internal code:")
+  printf("%i\n", groups.size());
+  }
 
   // Initialize data with memmode
   this->data = std::move(input_data);
