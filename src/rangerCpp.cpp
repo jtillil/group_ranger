@@ -119,11 +119,12 @@ Rcpp::List rangerCpp(uint treetype, Rcpp::NumericMatrix& input_x, Rcpp::NumericM
     }
 
     // Initialize data 
-    if (use_sparse_data) {
-      data = std::make_unique<DataSparse>(sparse_x, input_y, variable_names, num_rows, num_cols);
-    } else {
-      data = std::make_unique<DataRcpp>(input_x, input_y, variable_names, num_rows, num_cols);
-    }
+    // if (use_sparse_data) {
+    //   data = std::make_unique<DataSparse>(sparse_x, input_y, variable_names, num_rows, num_cols);
+    // } else {
+    //   data = std::make_unique<DataRcpp>(input_x, input_y, variable_names, num_rows, num_cols);
+    // }
+    data = std::make_unique<DataRcpp>(input_x, input_y, variable_names, num_rows, num_cols);
 
     // If there is snp data, add it
     if (snp_data.nrow() > 1) {
