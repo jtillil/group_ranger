@@ -191,7 +191,7 @@ void TreeGroup::predict(const Data* prediction_data, bool oob_prediction) {
       // Move to child
       size_t split_groupID = split_groupIDs[nodeID];
 
-      std::vector<double> sample = prediction_data->get_x_sample(sample_idx, (*groups)[split_groupID]);
+      std::vector<double> sample = prediction_data->get_x_sample(sample_idx, (*groups)[split_groupID], debug);
       // if (prediction_data->isOrderedVariable(split_groupID)) {
         if (x_is_in_right_child(sample, split_coefficients[nodeID], split_values[nodeID])) {
           // Move to right child
