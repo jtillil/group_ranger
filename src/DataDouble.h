@@ -65,9 +65,18 @@ public:
   }
 
   // WRITTEN FOR GROUP RANGER IMPLEMENTATION
-  // std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col, bool* debug) const override = {};
-  // std::vector<double> get_x_sample(size_t row, std::vector<uint> col, bool* debug) const override = {};
-  // std::vector<double> get_y_subset(std::vector<size_t> row) const override {};
+  std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col, bool* debug) const override = {
+    std::vector<std::vector<double>> result;
+    return result;
+  };
+  std::vector<double> get_x_sample(size_t row, std::vector<uint> col, bool* debug) const override = {
+    std::vector<double> result;
+    return result;
+  };
+  std::vector<double> get_y_subset(std::vector<size_t> row) const override {
+    std::vector<double> result;
+    return result;
+  };
 
 private:
   std::vector<double> x;

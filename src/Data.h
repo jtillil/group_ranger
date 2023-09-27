@@ -227,7 +227,7 @@ protected:
   bool order_snps;
 
   // debug
-  bool* debug;
+  // bool* debug;
 };
 
 } // namespace ranger
