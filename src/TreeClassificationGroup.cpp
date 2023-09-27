@@ -322,9 +322,9 @@ void TreeClassificationGroup::findBestSplitValueUnordered(size_t nodeID, size_t 
 
   if (*debug) {
     for(const auto& val : hyerplane) {
-        printf("Hyperplane:\n")
+        printf("Hyperplane:\n");
         Rcpp::Rcout << val << " ";
-        Rcpp::Rcout << std:endl;
+        Rcpp::Rcout << std::endl;
     }
   }
 
