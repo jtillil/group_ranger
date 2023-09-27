@@ -7,13 +7,13 @@
 #ifndef BOOST_STACKTRACE_HPP
 #define BOOST_STACKTRACE_HPP
 
-#include <boost/config.hpp>
+#include "config.hpp"
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #   pragma once
 #endif
 
-#include <boost/stacktrace/frame.hpp>
-#include <boost/stacktrace/stacktrace.hpp>  // Actually already includes all the headers
-#include <boost/stacktrace/safe_dump_to.hpp>
+#include "stacktrace/frame.hpp"
+#include "stacktrace/stacktrace.hpp"  // Actually already includes all the headers
+#include "stacktrace/safe_dump_to.hpp"
 
 #endif // BOOST_STACKTRACE_HPP
