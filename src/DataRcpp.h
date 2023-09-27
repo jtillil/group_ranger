@@ -90,9 +90,11 @@ public:
 
   // }
 
-  std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const override {
+  std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col, bool* debug) const override {
 
+    if (*debug) {
     printf("Starting get_x_subset() in DataRcpp\n");
+    }
 
     std::vector<std::vector<double>> x_out(row.size(), std::vector<double>(col.size()));
     for (size_t i = 0; i < row.size(); ++i) {
@@ -101,28 +103,32 @@ public:
       }
     }
 
+    if (*debug) {
     printf("%zu\n", x_out.size());
     printf("%zu\n", x_out[0].size());
-
     printf("Finished get_x_subset() in DataRcpp\n");
+    }
 
     return x_out;
 
   }
 
   // Get sample with columns specified by col, usually a group when use_variable_groups == TRUE
-  std::vector<double> get_x_sample(size_t row, std::vector<uint> col) const override {
+  std::vector<double> get_x_sample(size_t row, std::vector<uint> col, bool* debug) const override {
 
+    if (*debug) {
     printf("Starting get_x_sample() in DataRcpp\n");
+    }
 
     std::vector<double> x_out(std::vector<double>(col.size()));
     for (size_t j = 0; j < col.size(); ++j) {
       x_out[j] = get_x(row, col[j]);
     }
 
+    if (*debug) {
     printf("%zu\n", x_out.size());
-
     printf("Finished get_x_sample() in DataRcpp\n");
+    }
 
     return x_out;
 

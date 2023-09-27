@@ -39,7 +39,7 @@ ForestGroup::ForestGroup() :
         DEFAULT_MAXDEPTH), alpha(DEFAULT_ALPHA), minprop(DEFAULT_MINPROP), num_threads(DEFAULT_NUM_THREADS), data { }, overall_prediction_error(
         NAN), importance_mode(DEFAULT_IMPORTANCE_MODE), regularization_usedepth(false), progress(0), use_grouped_variables(
         true), groups({{0}}), num_groups(0), splitmethod("LDA"), debug(0) {
-    printf("This is make_unique<ForestGroup>.\n");
+    // printf("This is make_unique<ForestGroup>.\n");
 }
 
 // #nocov start
@@ -314,16 +314,19 @@ void ForestGroup::run(bool verbose, bool compute_oob_error) {
       *verbose_out << "Predicting .." << std::endl;
     }
 
+    if (debug) {
     printf("Starting predict()\n");
-
+    }
     predict();
+
   } else {
     if (verbose && verbose_out) {
       *verbose_out << "Growing trees .." << std::endl;
     }
 
+    if (debug) {
     printf("Starting grow()\n");
-
+    }
     grow();
 
     if (verbose && verbose_out) {
@@ -332,7 +335,9 @@ void ForestGroup::run(bool verbose, bool compute_oob_error) {
 
     if (compute_oob_error) {
 
+      if (debug) {
       printf("Starting computePredictionError()\n");
+      }
       computePredictionError();
     }
 
@@ -341,7 +346,10 @@ void ForestGroup::run(bool verbose, bool compute_oob_error) {
       if (verbose && verbose_out) {
         *verbose_out << "Computing permutation variable importance .." << std::endl;
       }
+
+      if (debug) {
       printf("Starting computePermutationImportance()\n");
+      }
       computePermutationImportance();
     }
   }

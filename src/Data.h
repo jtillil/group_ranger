@@ -34,8 +34,8 @@ public:
   virtual double get_x(size_t row, size_t col) const = 0;
   virtual double get_y(size_t row, size_t col) const = 0;
 
-  virtual std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col) const = 0;
-  virtual std::vector<double> get_x_sample(size_t row, std::vector<uint> col) const = 0;
+  virtual std::vector<std::vector<double>> get_x_subset(std::vector<size_t> row, std::vector<uint> col, bool* debug) const = 0;
+  virtual std::vector<double> get_x_sample(size_t row, std::vector<uint> col, bool* debug) const = 0;
   virtual std::vector<double> get_y_subset(std::vector<size_t> row) const = 0;
 
   size_t getVariableID(const std::string& variable_name) const;
