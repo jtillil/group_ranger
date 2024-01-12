@@ -10,3 +10,7 @@ ranger*.tar.gz
 ranger*.tgz
 revdep/*
 .vscode
+.Rdata
+*.Rdata
+.DS_Store
+*.DS_Store
